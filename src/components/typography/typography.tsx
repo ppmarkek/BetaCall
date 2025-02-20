@@ -12,9 +12,9 @@ enum Variant {
 }
 
 enum TypographyWeight {
-  'Bold',
-  'Regular',
-  'Small',
+  Bold = 'Bold',
+  Regular = 'Regular',
+  Small = 'Small',
 }
 
 type TypographyProps = {
@@ -29,7 +29,7 @@ type TypographyProps = {
     | 'SmallRegular'
     | Variant;
   color?: string;
-  weight?: TypographyWeight;
+  weight?: 'Bold' | 'Regular' | 'Small' | TypographyWeight;
   children?: React.ReactNode;
 };
 

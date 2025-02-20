@@ -3,10 +3,12 @@
 import { Box, Flex, Grid, GridItem, Image, Text } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import Button from '../button/button';
-// import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import Link from 'next/link';
 // import Typography from '../typography/typography';
 
 export default function Header() {
+  const pathname = usePathname();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
@@ -41,9 +43,15 @@ export default function Header() {
               </Text>
             </Flex>
             <Box>
-              <Button variant="Outline" backgound={'#ECEEF5'} color={'#8083A3'}>
-                Sign In
-              </Button>
+              <Link href={pathname === '/signIn' ? '/signUp' : '/signIn'}>
+                <Button
+                  variant="Outline"
+                  backgound={'#ECEEF5'}
+                  color={'#8083A3'}
+                >
+                  {pathname === '/signIn' ? 'Sign Up' : 'Sign In'}
+                </Button>
+              </Link>
             </Box>
           </Flex>
         </Box>

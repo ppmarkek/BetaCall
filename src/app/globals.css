@@ -7,3 +7,11 @@
   font-style: normal;
   color: #1a1c1d;
 }
+
+.input-success {
+  border-bottom: 1px solid #28c345 !important;
+}
+
+.input-error {
+  border-bottom: 1px solid #ff808b !important;
+}
