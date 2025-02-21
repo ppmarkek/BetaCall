@@ -2,7 +2,7 @@
 
 import { Flex, StepsContent, StepsRoot } from '@chakra-ui/react';
 import { Wrapper } from './style';
-import { StepOne, StepThree, StepTwo } from './steps';
+import { StepOne, StepTwo, StepThree } from './steps';
 import { useState } from 'react';
 
 type FormDataStepOne = {
