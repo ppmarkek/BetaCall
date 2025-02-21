@@ -7,6 +7,7 @@ import TextInput from '@/components/input/input';
 import Typography from '@/components/typography/typography';
 import Button from '@/components/button/button';
 import { StyledCheckbox, StyledLink } from './style';
+import { userSignIn } from '../api/auth/route';
 
 interface FormDataSignIn {
   email: string;
@@ -36,8 +37,8 @@ export const SignInSteps = () => {
     setShowPassword((prevState) => !prevState);
   };
 
-  const onSubmit = (data: FormDataSignIn) => {
-    console.log('Data sent:', data);
+  const onSubmit = async (data: FormDataSignIn) => {
+    return await userSignIn(data);
   };
 
   return (
