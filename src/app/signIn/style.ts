@@ -1,10 +1,12 @@
 import { Flex } from '@chakra-ui/react';
 import styled from '@emotion/styled';
+import Link from 'next/link';
 
 export const Wrapper = styled(Flex)`
   width: 420px;
   flex-direction: column;
   text-align: center;
+  gap: 50px;
 `;
 
 export const StyledCheckbox = styled.input`
@@ -36,31 +38,32 @@ export const StyledCheckbox = styled.input`
 `;
 
 export const BoxOr = styled(Flex)`
-  width: 190px;
+  width: 100%;
+  display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
 
-  ::before {
+  ::before,
+  ::after {
     content: '';
-    width: 70px;
-    position: absolute;
-    top: 50%;
-    left: 0;
-    border-bottom: 1px solid #eeeeee;
+    flex-grow: 1;
+    height: 1px;
+    background-color: #eeeeee;
+  }
+
+  ::before {
+    margin-right: 12px;
+    max-width: 100px;
   }
 
   ::after {
-    content: '';
-    width: 70px;
-    position: absolute;
-    top: 50%;
-    right: 0;
-    border-bottom: 1px solid #eeeeee;
+    margin-left: 12px;
+    max-width: 100px;
   }
 `;
 
-export const StyledLink = styled.a`
+export const StyledLink = styled(Link)`
   font-family: 'Lato', sans-serif;
   font-size: 16px;
   font-weight: 700;
