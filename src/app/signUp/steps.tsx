@@ -14,7 +14,6 @@ import TextInput from '@/components/input/input';
 import Typography from '@/components/typography/typography';
 import Button from '@/components/button/button';
 import { BoxOr, StyledCheckbox, StyledLink } from './style';
-import { useSocialAuth } from '@/hooks/useSocialAuth';
 
 interface FormDataStepOne {
   email: string;
@@ -63,7 +62,6 @@ export const StepOne = ({ nextStep }: StepOneProps) => {
     formState: { errors },
   } = useForm<FormDataStepOne>();
 
-  const { handleSocialLogin } = useSocialAuth();
   const onSubmit = (data: FormDataStepOne) => nextStep(data);
 
   return (
@@ -128,7 +126,6 @@ export const StepOne = ({ nextStep }: StepOneProps) => {
           backgound="#ECEEF5"
           color="#8083A3"
           iconElement={FaGoogle}
-          onClick={() => handleSocialLogin('google')}
         >
           Sign Up with Google
         </Button>
@@ -137,7 +134,6 @@ export const StepOne = ({ nextStep }: StepOneProps) => {
           backgound="#ECEEF5"
           color="#8083A3"
           iconElement={FaFacebookF}
-          onClick={() => handleSocialLogin('facebook')}
         >
           Sign Up with Facebook
         </Button>
@@ -146,7 +142,6 @@ export const StepOne = ({ nextStep }: StepOneProps) => {
           backgound="#ECEEF5"
           color="#8083A3"
           iconElement={FaXTwitter}
-          onClick={() => handleSocialLogin('twitter')}
         >
           Sign Up with X
         </Button>

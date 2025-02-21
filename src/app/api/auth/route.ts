@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const authURL = 'https://localhost:8080/api/users';
+const authURL = 'https://betacall-backend.onrender.com/api/users';
 
 export const userSignIn = async ({
   email,
