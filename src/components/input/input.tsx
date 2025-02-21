@@ -13,6 +13,7 @@ type TextInputProps = Omit<
   placeholder?: string;
   error?: boolean;
   errorText?: string;
+  onIconClick?: () => void;
 };
 
 export default function TextInput({
@@ -21,6 +22,7 @@ export default function TextInput({
   iconElement,
   error,
   errorText,
+  onIconClick,
   ...rest
 }: TextInputProps) {
   const IconComponent = iconElement;
@@ -58,6 +60,8 @@ export default function TextInput({
           right={0}
           bottom={'8px'}
           fontSize={'20px'}
+          cursor="pointer"
+          onClick={onIconClick}
         >
           <IconComponent />
         </Icon>
