@@ -45,6 +45,7 @@ export default function Header() {
             <Box>
               <Link href={pathname === '/signIn' ? '/signUp' : '/signIn'}>
                 <Button
+                  height={'40px'}
                   variant="Outline"
                   backgound={'#ECEEF5'}
                   color={'#8083A3'}

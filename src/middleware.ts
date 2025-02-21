@@ -2,13 +2,12 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 const publicRoutes = ['/signUp', '/signIn'];
-const staticFiles = /^\/(favicon\.svg|icons\/.*)$/;
 
 export function middleware(req: NextRequest) {
   const isAuthenticated = req.cookies.get('token')?.value;
   const pathname = req.nextUrl.pathname;
 
-  if (staticFiles.test(pathname)) {
+  if (/\.[^/]+$/.test(pathname)) {
     return NextResponse.next();
   }
 

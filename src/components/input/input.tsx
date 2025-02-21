@@ -2,6 +2,7 @@ import { Icon } from '@chakra-ui/react';
 import Typography from '../typography/typography';
 import { InputBox, StyledInput } from './style';
 import { IconType } from 'react-icons';
+import { Tooltip } from '../ui/tooltip';
 
 type TextInputProps = Omit<
   React.InputHTMLAttributes<HTMLInputElement>,
@@ -11,6 +12,7 @@ type TextInputProps = Omit<
   iconElement?: IconType;
   placeholder?: string;
   error?: boolean;
+  errorText?: string;
 };
 
 export default function TextInput({
@@ -18,6 +20,7 @@ export default function TextInput({
   placeholder,
   iconElement,
   error,
+  errorText,
   ...rest
 }: TextInputProps) {
   const IconComponent = iconElement;
@@ -27,15 +30,36 @@ export default function TextInput({
       <Typography variant="Button" color={'#8083A3'}>
         {title}
       </Typography>
-      <StyledInput
-        {...rest}
-        placeholder={placeholder}
-        className={error ? 'input-error' : ''}
-        color={error ? '#ff808b' : '#1a1c1d'}
-      />
+      <Tooltip
+        showArrow
+        content={errorText}
+        contentProps={{
+          css: {
+            '--tooltip-bg': '#ff808b',
+            padding: '10px',
+            display: error ? 'block' : 'none',
+          },
+        }}
+        openDelay={500}
+        closeDelay={100}
+      >
+        <StyledInput
+          {...rest}
+          $icon={!!IconComponent}
+          placeholder={placeholder}
+          className={error ? 'input-error' : ''}
+          color={error ? '#ff808b' : '#1a1c1d'}
+        />
+      </Tooltip>
       {IconComponent && (
-        <Icon position={'absolute'} right={0} bottom={'8px'} fontSize={'20px'}>
-          <IconComponent fill={error ? '#ff808b' : ''} />
+        <Icon
+          className={`input-icon ${error ? 'input-icon-error' : ''}`}
+          position={'absolute'}
+          right={0}
+          bottom={'8px'}
+          fontSize={'20px'}
+        >
+          <IconComponent />
         </Icon>
       )}
     </InputBox>
