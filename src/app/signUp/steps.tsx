@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Flex, Grid, Image } from '@chakra-ui/react';
 import { useForm, Controller } from 'react-hook-form';
 import { MdEmail, MdLock } from 'react-icons/md';
@@ -14,6 +14,7 @@ import TextInput from '@/components/input/input';
 import Typography from '@/components/typography/typography';
 import Button from '@/components/button/button';
 import { BoxOr, StyledCheckbox, StyledLink } from './style';
+import { userSignUp } from '../api/auth/route';
 
 interface FormDataStepOne {
   email: string;
@@ -151,6 +152,7 @@ export const StepOne = ({ nextStep }: StepOneProps) => {
 };
 
 export const StepTwo = ({ email, nextStep }: StepTwoProps) => {
+  const [emailExist, setEmailExist] = useState(false);
   const {
     control,
     register,
@@ -167,9 +169,14 @@ export const StepTwo = ({ email, nextStep }: StepTwoProps) => {
     reset({ email });
   }, [email, reset]);
 
-  const onSubmit = (data: FormDataStepTwo) => {
-    console.log('Form Data:', data);
-    nextStep();
+  const onSubmit = async (data: FormDataStepTwo) => {
+    try {
+      const response = await userSignUp(data);
+      if (response.status >= 400) setEmailExist(true);
+      if (response.status === 201) nextStep();
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const password = watch('password');
@@ -181,6 +188,11 @@ export const StepTwo = ({ email, nextStep }: StepTwoProps) => {
         <Typography variant="Regular" color="#8083A3">
           Enter your details to proceed further
         </Typography>
+        {emailExist && (
+          <Typography color={'#ff808b'}>
+            A user with the same email already exists
+          </Typography>
+        )}
       </Flex>
 
       <form onSubmit={handleSubmit(onSubmit)}>
