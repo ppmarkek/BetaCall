@@ -14,6 +14,7 @@ type ButtonProps = {
   color?: string;
   width?: string;
   backgound?: string;
+  height?: string;
   iconElement?: IconType;
   children?: React.ReactNode;
 } & React.ButtonHTMLAttributes<HTMLButtonElement>;
@@ -22,6 +23,7 @@ export default function Button({
   variant = Variant.Filled,
   color,
   width,
+  height,
   backgound,
   children,
   iconElement,
@@ -33,6 +35,7 @@ export default function Button({
     case Variant.Filled:
       return (
         <FilledButton
+          buttonHeight={height}
           buttonWidth={width}
           bgColor={backgound}
           textColor={color}
@@ -44,6 +47,7 @@ export default function Button({
     case Variant.Outline:
       return (
         <OutlineButton
+          buttonHeight={height}
           buttonWidth={width}
           bgColor={backgound}
           textColor={color}
@@ -64,6 +68,7 @@ export default function Button({
     default:
       return (
         <FilledButton
+          buttonHeight={height}
           buttonWidth={width}
           bgColor={backgound}
           textColor={color}

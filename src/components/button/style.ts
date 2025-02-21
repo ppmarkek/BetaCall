@@ -5,7 +5,9 @@ export const FilledButton = styled(Button)<{
   bgColor?: string;
   textColor?: string;
   buttonWidth?: string;
+  buttonHeight?: string;
 }>`
+  height: ${({ buttonHeight }) => buttonHeight || '50px'};
   font-size: 16px;
   font-weight: 700;
   line-height: 20px;
@@ -13,7 +15,7 @@ export const FilledButton = styled(Button)<{
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 15px 30px;
+  padding: 0 30px;
   border-radius: 10px;
   width: ${({ buttonWidth }) => buttonWidth || 'auto'};
   border: 1px solid ${({ bgColor }) => bgColor || '#6B59CC'};
@@ -31,7 +33,9 @@ export const OutlineButton = styled(Button)<{
   bgColor?: string;
   textColor?: string;
   buttonWidth?: string;
+  buttonHeight?: string;
 }>`
+  height: ${({ buttonHeight }) => buttonHeight || '50px'};
   font-size: 16px;
   font-weight: 700;
   line-height: 20px;
@@ -39,7 +43,7 @@ export const OutlineButton = styled(Button)<{
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 15px 30px;
+  padding: 0 30px;
   border-radius: 10px;
   width: ${({ buttonWidth }) => buttonWidth || 'auto'};
   border: 1px solid ${({ bgColor }) => bgColor || '#6B59CC'};
