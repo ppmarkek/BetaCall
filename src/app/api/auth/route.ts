@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const authURL = 'https://betacall-backend.onrender.com/api/users';
+const authURL = 'https://localhost:8080/api/users';
 
 export const userSignIn = async ({
   email,
@@ -10,8 +10,8 @@ export const userSignIn = async ({
   password: string;
 }) => {
   try {
-    const response = await axios.post(authURL, { email, password });
-    return response;
+    const response = await axios.post(`${authURL}/login`, { email, password });
+    return response.data;
   } catch (err) {
     return console.error(err);
   }
