@@ -67,15 +67,14 @@ export const StepOne = ({ nextStep, setLoading }: StepOneProps) => {
     handleSubmit,
     formState: { errors },
   } = useForm<FormDataStepOne>();
-
   const onSubmit = (data: FormDataStepOne) => nextStep(data);
 
   const handleGoogleLogin = () => {
     setLoading(true);
     account.createOAuth2Session(
       OAuthProvider.Google,
-      'http://localhost:3000/signUp',
-      'http://localhost:3000/signUp'
+      'http://localhost:3000/signUp?socialMedia=true',
+      'http://localhost:3000/signUp?socialMedia=false'
     );
   };
 

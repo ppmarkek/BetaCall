@@ -10,7 +10,7 @@ import Typography from '@/components/typography/typography';
 import Button from '@/components/button/button';
 import { userSignIn, userGoogleSignIn } from '../api/auth/route';
 import { StyledCheckbox, StyledLink, Wrapper, BoxOr } from './style';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { account } from '@/lib/appwrite';
 import { OAuthProvider } from 'appwrite';
 
@@ -21,9 +21,11 @@ interface FormDataSignIn {
 }
 
 export default function SignInPage() {
+  const searchParams = useSearchParams();
+  const search = searchParams.get('socialMedia');
   const [showPassword, setShowPassword] = useState(false);
   const [errorLogin, setErrorLogin] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(search ? true : false);
   const router = useRouter();
 
   const {
@@ -32,7 +34,7 @@ export default function SignInPage() {
     formState: { errors },
   } = useForm<FormDataSignIn>();
 
-  const togglePasswordVisibility = () => {
+  const togglePasswordVisibility: () => void = () => {
     setShowPassword((prev) => !prev);
   };
 
@@ -56,12 +58,13 @@ export default function SignInPage() {
     setLoading(true);
     account.createOAuth2Session(
       OAuthProvider.Google,
-      'http://localhost:3000/signIn',
-      'http://localhost:3000/signIn'
+      'http://localhost:3000/signIn?socialMedia=true',
+      'http://localhost:3000/signIn?socialMedia=false'
     );
   };
 
   useEffect(() => {
+    const params = new URLSearchParams(searchParams.toString());
     account
       .get()
       .then(async (data) => {
@@ -72,13 +75,23 @@ export default function SignInPage() {
             googleId: data.$id,
           });
           if (response.status === 200) {
+            if (params.has('socialMedia')) {
+              params.delete('socialMedia');
+              const newUrl = `?${params.toString()}`;
+              window.history.replaceState(null, '', newUrl);
+            }
             document.cookie = `accessToken=${response.data.accessToken}; path=/; Secure; SameSite=Strict;`;
             document.cookie = `refreshToken=${response.data.refreshToken}; path=/; Secure; SameSite=Strict;`;
             router.push('/');
           } else if (response.status === 404) {
             const [firstName, lastName] = data.name.split(' ');
+            if (params.has('socialMedia')) {
+              params.delete('socialMedia');
+              const newUrl = `?${params.toString()}`;
+              window.history.replaceState(null, '', newUrl);
+            }
             router.push(
-              `/signUp?step=2&email=${encodeURIComponent(data.email)}&googleId=${encodeURIComponent(
+              `/signUp?socialMedia=true&step=2&email=${encodeURIComponent(data.email)}&googleId=${encodeURIComponent(
                 data.$id
               )}&firstName=${encodeURIComponent(firstName)}&lastName=${encodeURIComponent(lastName)}`
             );
@@ -93,7 +106,7 @@ export default function SignInPage() {
       .finally(() => {
         setLoading(false);
       });
-  }, [router]);
+  }, [router, searchParams]);
 
   if (loading) {
     return (

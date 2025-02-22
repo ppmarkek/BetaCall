@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { account } from '@/lib/appwrite';
 import { userGoogleSignIn } from '../api/auth/route';
 import { useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 
 type FormDataStepOne = {
   email: string;
@@ -14,18 +15,25 @@ type FormDataStepOne = {
 };
 
 export default function SignUpPage() {
+  const searchParams = useSearchParams();
+  const search = searchParams.get('socialMedia');
   const [step, setStep] = useState(0);
   const [email, setEmail] = useState('');
   const [googleId, setGoogleId] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(search ? true : false);
   const router = useRouter();
 
   useEffect(() => {
     account
       .get()
       .then(async (data) => {
+        const params = new URLSearchParams(searchParams.toString());
+        params.delete('socialMedia');
+        const newUrl = `?${params.toString()}`;
+        window.history.replaceState(null, '', newUrl);
+
         setLoading(true);
         if (data) {
           const response = await userGoogleSignIn({
@@ -57,7 +65,7 @@ export default function SignUpPage() {
       .finally(() => {
         setLoading(false);
       });
-  }, [router]);
+  }, [router, searchParams]);
 
   useEffect(() => {
     const handleBeforeUnload = () => {
