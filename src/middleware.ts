@@ -4,7 +4,7 @@ import type { NextRequest } from 'next/server';
 const publicRoutes = ['/signUp', '/signIn'];
 
 export function middleware(req: NextRequest) {
-  const isAuthenticated = req.cookies.get('token')?.value;
+  const isAuthenticated = req.cookies.get('accessToken')?.value;
   const pathname = req.nextUrl.pathname;
 
   if (/\.[^/]+$/.test(pathname)) {

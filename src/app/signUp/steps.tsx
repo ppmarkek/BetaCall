@@ -9,12 +9,13 @@ import {
   FaCheckCircle,
 } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6';
-
 import TextInput from '@/components/input/input';
 import Typography from '@/components/typography/typography';
 import Button from '@/components/button/button';
 import { BoxOr, StyledCheckbox, StyledLink } from './style';
 import { userSignUp } from '../api/auth/route';
+import { OAuthProvider } from 'appwrite';
+import { account } from '@/lib/appwrite';
 
 interface FormDataStepOne {
   email: string;
@@ -32,10 +33,14 @@ interface FormDataStepTwo {
 
 interface StepOneProps {
   nextStep: (data: FormDataStepOne) => void;
+  setLoading: (value: boolean) => void;
 }
 
 interface StepTwoProps {
-  email: string;
+  email?: string;
+  googleId?: string;
+  firstName?: string;
+  lastName?: string;
   nextStep: () => void;
 }
 
@@ -56,7 +61,7 @@ const validatePassword = (value: string): true | string => {
   return true;
 };
 
-export const StepOne = ({ nextStep }: StepOneProps) => {
+export const StepOne = ({ nextStep, setLoading }: StepOneProps) => {
   const {
     register,
     handleSubmit,
@@ -64,6 +69,15 @@ export const StepOne = ({ nextStep }: StepOneProps) => {
   } = useForm<FormDataStepOne>();
 
   const onSubmit = (data: FormDataStepOne) => nextStep(data);
+
+  const handleGoogleLogin = () => {
+    setLoading(true);
+    account.createOAuth2Session(
+      OAuthProvider.Google,
+      'http://localhost:3000/signUp',
+      'http://localhost:3000/signUp'
+    );
+  };
 
   return (
     <Flex flexDirection="column" gap="50px">
@@ -127,6 +141,7 @@ export const StepOne = ({ nextStep }: StepOneProps) => {
           backgound="#ECEEF5"
           color="#8083A3"
           iconElement={FaGoogle}
+          onClick={handleGoogleLogin}
         >
           Sign Up with Google
         </Button>
@@ -151,7 +166,13 @@ export const StepOne = ({ nextStep }: StepOneProps) => {
   );
 };
 
-export const StepTwo = ({ email, nextStep }: StepTwoProps) => {
+export const StepTwo = ({
+  email,
+  googleId,
+  firstName,
+  lastName,
+  nextStep,
+}: StepTwoProps) => {
   const [emailExist, setEmailExist] = useState(false);
   const {
     control,
@@ -166,12 +187,19 @@ export const StepTwo = ({ email, nextStep }: StepTwoProps) => {
   });
 
   useEffect(() => {
-    reset({ email });
-  }, [email, reset]);
+    reset({ email, firstName, lastName });
+  }, [email, firstName, lastName, reset]);
 
   const onSubmit = async (data: FormDataStepTwo) => {
     try {
-      const response = await userSignUp(data);
+      const response = await userSignUp({
+        email: data.email,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        password: data.password,
+        googleId: googleId,
+        terms: data.terms,
+      });
       if (response.status >= 400) setEmailExist(true);
       if (response.status === 201) nextStep();
     } catch (err) {
@@ -214,26 +242,42 @@ export const StepTwo = ({ email, nextStep }: StepTwoProps) => {
           />
 
           <Grid templateColumns="repeat(2, 1fr)" gap="30px">
-            <TextInput
-              title="First name"
-              iconElement={FaUserAlt}
-              placeholder="Enter your first name"
-              error={!!errors.firstName}
-              errorText={errors.firstName?.message}
-              {...register('firstName', {
-                required: 'First name is required',
-              })}
+            <Controller
+              control={control}
+              name="firstName"
+              defaultValue={firstName}
+              render={({ field }) => (
+                <TextInput
+                  {...field}
+                  title="First name"
+                  iconElement={FaUserAlt}
+                  placeholder="Enter your first name"
+                  error={!!errors.firstName}
+                  errorText={errors.firstName?.message}
+                  {...register('firstName', {
+                    required: 'First name is required',
+                  })}
+                />
+              )}
             />
 
-            <TextInput
-              title="Last name"
-              iconElement={FaUserAlt}
-              placeholder="Enter your last name"
-              error={!!errors.lastName}
-              errorText={errors.lastName?.message}
-              {...register('lastName', {
-                required: 'Last name is required',
-              })}
+            <Controller
+              control={control}
+              name="lastName"
+              defaultValue={lastName}
+              render={({ field }) => (
+                <TextInput
+                  {...field}
+                  title="Last name"
+                  iconElement={FaUserAlt}
+                  placeholder="Enter your last name"
+                  error={!!errors.lastName}
+                  errorText={errors.lastName?.message}
+                  {...register('lastName', {
+                    required: 'Last name is required',
+                  })}
+                />
+              )}
             />
           </Grid>
 

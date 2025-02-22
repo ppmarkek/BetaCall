@@ -2,22 +2,62 @@ import axios, { AxiosResponse } from 'axios';
 
 const authURL = 'https://betacall-backend.onrender.com/api/users';
 
+interface SignInResponseData {
+  accessToken: string;
+  message: string;
+  refreshToken: string;
+  user: {
+    _id: string;
+    createdAt: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    role: string;
+    updatedAt: string;
+    __v: number;
+  };
+}
+
 export const userSignIn = async ({
   email,
   password,
 }: {
   email: string;
   password: string;
-}): Promise<AxiosResponse<unknown>> => {
+}): Promise<AxiosResponse<SignInResponseData>> => {
   try {
-    const response = await axios.post<unknown>(`${authURL}/login`, {
+    const response = await axios.post<SignInResponseData>(`${authURL}/login`, {
       email,
       password,
     });
     return response;
   } catch (err) {
     if (axios.isAxiosError(err) && err.response) {
-      return err.response as AxiosResponse<unknown>;
+      return err.response as AxiosResponse<SignInResponseData>;
+    }
+    throw err;
+  }
+};
+
+export const userGoogleSignIn = async ({
+  email,
+  googleId,
+}: {
+  email: string;
+  googleId: string;
+}): Promise<AxiosResponse<SignInResponseData>> => {
+  try {
+    const response = await axios.post<SignInResponseData>(
+      `${authURL}/login/google`,
+      {
+        email,
+        googleId,
+      }
+    );
+    return response;
+  } catch (err) {
+    if (axios.isAxiosError(err) && err.response) {
+      return err.response as AxiosResponse<SignInResponseData>;
     }
     throw err;
   }
@@ -28,12 +68,14 @@ export const userSignUp = async ({
   firstName,
   lastName,
   password,
+  googleId,
   terms,
 }: {
   email: string;
   firstName: string;
   lastName: string;
   password: string;
+  googleId?: string;
   terms: boolean;
 }): Promise<AxiosResponse<unknown>> => {
   try {
@@ -42,6 +84,7 @@ export const userSignUp = async ({
       firstName,
       lastName,
       password,
+      googleId,
       terms,
     });
     return response;
