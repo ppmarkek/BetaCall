@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-const publicRoutes = ['/signUp', '/signIn'];
+const publicRoutes = ['/signUp', '/signIn', '/recoverPassword'];
 
 export function middleware(req: NextRequest) {
   const isAuthenticated = req.cookies.get('accessToken')?.value;
