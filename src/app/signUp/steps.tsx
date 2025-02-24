@@ -2,19 +2,14 @@ import { useEffect, useState } from 'react';
 import { Flex, Grid, Image } from '@chakra-ui/react';
 import { useForm, Controller } from 'react-hook-form';
 import { MdEmail, MdLock } from 'react-icons/md';
-import {
-  FaGoogle,
-  FaFacebookF,
-  FaUserAlt,
-  FaCheckCircle,
-} from 'react-icons/fa';
-import { FaXTwitter } from 'react-icons/fa6';
-
+import { FaGoogle, FaUserAlt, FaCheckCircle, FaGithub } from 'react-icons/fa';
 import TextInput from '@/components/input/input';
 import Typography from '@/components/typography/typography';
 import Button from '@/components/button/button';
 import { BoxOr, StyledCheckbox, StyledLink } from './style';
-import { userSignUp } from '../api/auth/route';
+import { resendVerification, userSignUp } from '../api/auth/route';
+import { OAuthProvider } from 'appwrite';
+import { account } from '@/lib/appwrite';
 
 interface FormDataStepOne {
   email: string;
@@ -32,10 +27,16 @@ interface FormDataStepTwo {
 
 interface StepOneProps {
   nextStep: (data: FormDataStepOne) => void;
+  setLoading: (value: boolean) => void;
 }
 
 interface StepTwoProps {
-  email: string;
+  email?: string;
+  appwriteId?: string;
+  firstName?: string;
+  lastName?: string;
+  terms?: boolean;
+  setLoading: (value: boolean) => void;
   nextStep: () => void;
 }
 
@@ -56,14 +57,31 @@ const validatePassword = (value: string): true | string => {
   return true;
 };
 
-export const StepOne = ({ nextStep }: StepOneProps) => {
+export const StepOne = ({ nextStep, setLoading }: StepOneProps) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<FormDataStepOne>();
-
   const onSubmit = (data: FormDataStepOne) => nextStep(data);
+
+  const handleGoogleLogin = () => {
+    setLoading(true);
+    account.createOAuth2Session(
+      OAuthProvider.Google,
+      'http://localhost:3000/signUp?socialMedia=true',
+      'http://localhost:3000/signUp?socialMedia=false'
+    );
+  };
+
+  const handleGithubLogin = () => {
+    setLoading(true);
+    account.createOAuth2Session(
+      OAuthProvider.Github,
+      'http://localhost:3000/signUp?socialMedia=true',
+      'http://localhost:3000/signUp?socialMedia=false'
+    );
+  };
 
   return (
     <Flex flexDirection="column" gap="50px">
@@ -80,6 +98,7 @@ export const StepOne = ({ nextStep }: StepOneProps) => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <Flex flexDirection="column" gap="35px">
           <TextInput
+            type="email"
             title="Email"
             iconElement={MdEmail}
             placeholder="Enter your email"
@@ -127,6 +146,7 @@ export const StepOne = ({ nextStep }: StepOneProps) => {
           backgound="#ECEEF5"
           color="#8083A3"
           iconElement={FaGoogle}
+          onClick={handleGoogleLogin}
         >
           Sign Up with Google
         </Button>
@@ -134,24 +154,25 @@ export const StepOne = ({ nextStep }: StepOneProps) => {
           variant="IconButton"
           backgound="#ECEEF5"
           color="#8083A3"
-          iconElement={FaFacebookF}
+          iconElement={FaGithub}
+          onClick={handleGithubLogin}
         >
-          Sign Up with Facebook
-        </Button>
-        <Button
-          variant="IconButton"
-          backgound="#ECEEF5"
-          color="#8083A3"
-          iconElement={FaXTwitter}
-        >
-          Sign Up with X
+          Sign Up with GitHub
         </Button>
       </Flex>
     </Flex>
   );
 };
 
-export const StepTwo = ({ email, nextStep }: StepTwoProps) => {
+export const StepTwo = ({
+  email,
+  appwriteId,
+  firstName,
+  lastName,
+  terms,
+  nextStep,
+  setLoading,
+}: StepTwoProps) => {
   const [emailExist, setEmailExist] = useState(false);
   const {
     control,
@@ -166,14 +187,25 @@ export const StepTwo = ({ email, nextStep }: StepTwoProps) => {
   });
 
   useEffect(() => {
-    reset({ email });
-  }, [email, reset]);
+    reset({ email, firstName, lastName, terms });
+  }, [email, firstName, lastName, terms, reset]);
 
   const onSubmit = async (data: FormDataStepTwo) => {
     try {
-      const response = await userSignUp(data);
+      setLoading(true);
+      const response = await userSignUp({
+        email: data.email,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        password: data.password,
+        appwriteId: appwriteId,
+        terms: data.terms,
+      });
       if (response.status >= 400) setEmailExist(true);
-      if (response.status === 201) nextStep();
+      if (response.status === 201) {
+        setLoading(false);
+        nextStep();
+      }
     } catch (err) {
       console.error(err);
     }
@@ -204,6 +236,7 @@ export const StepTwo = ({ email, nextStep }: StepTwoProps) => {
             render={({ field }) => (
               <TextInput
                 {...field}
+                type="email"
                 title="Email"
                 iconElement={MdEmail}
                 placeholder="Enter your email"
@@ -214,26 +247,42 @@ export const StepTwo = ({ email, nextStep }: StepTwoProps) => {
           />
 
           <Grid templateColumns="repeat(2, 1fr)" gap="30px">
-            <TextInput
-              title="First name"
-              iconElement={FaUserAlt}
-              placeholder="Enter your first name"
-              error={!!errors.firstName}
-              errorText={errors.firstName?.message}
-              {...register('firstName', {
-                required: 'First name is required',
-              })}
+            <Controller
+              control={control}
+              name="firstName"
+              defaultValue={firstName}
+              render={({ field }) => (
+                <TextInput
+                  {...field}
+                  title="First name"
+                  iconElement={FaUserAlt}
+                  placeholder="Enter your first name"
+                  error={!!errors.firstName}
+                  errorText={errors.firstName?.message}
+                  {...register('firstName', {
+                    required: 'First name is required',
+                  })}
+                />
+              )}
             />
 
-            <TextInput
-              title="Last name"
-              iconElement={FaUserAlt}
-              placeholder="Enter your last name"
-              error={!!errors.lastName}
-              errorText={errors.lastName?.message}
-              {...register('lastName', {
-                required: 'Last name is required',
-              })}
+            <Controller
+              control={control}
+              name="lastName"
+              defaultValue={lastName}
+              render={({ field }) => (
+                <TextInput
+                  {...field}
+                  title="Last name"
+                  iconElement={FaUserAlt}
+                  placeholder="Enter your last name"
+                  error={!!errors.lastName}
+                  errorText={errors.lastName?.message}
+                  {...register('lastName', {
+                    required: 'Last name is required',
+                  })}
+                />
+              )}
             />
           </Grid>
 
@@ -305,7 +354,9 @@ export const StepThree = ({ email }: StepThreeProps) => {
           Click the confirmation link in the email to verify your account
         </Typography>
       </Flex>
-      <StyledLink>Resend Email</StyledLink>
+      <StyledLink onClick={() => resendVerification(email)}>
+        Resend Email
+      </StyledLink>
     </Flex>
   );
 };

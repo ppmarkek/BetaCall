@@ -4,10 +4,14 @@ import type { NextRequest } from 'next/server';
 const publicRoutes = ['/signUp', '/signIn'];
 
 export function middleware(req: NextRequest) {
-  const isAuthenticated = req.cookies.get('token')?.value;
-  const pathname = req.nextUrl.pathname;
+  const isAuthenticated = req.cookies.get('accessToken')?.value;
+  const { pathname } = req.nextUrl;
 
   if (/\.[^/]+$/.test(pathname)) {
+    return NextResponse.next();
+  }
+
+  if (pathname.startsWith('/verify/')) {
     return NextResponse.next();
   }
 
@@ -23,5 +27,7 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: '/((?!_next/static|_next/image|favicon.ico).*)',
+  matcher: [
+    '/((?!_next/static|_next/image|favicon.ico|favicon.svg|assets|icons).*)',
+  ],
 };

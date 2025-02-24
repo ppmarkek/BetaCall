@@ -2,17 +2,71 @@ import axios, { AxiosResponse } from 'axios';
 
 const authURL = 'https://betacall-backend.onrender.com/api/users';
 
+interface SignInResponseData {
+  accessToken: string;
+  message: string;
+  refreshToken: string;
+  user: {
+    _id: string;
+    createdAt: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    role: string;
+    updatedAt: string;
+    __v: number;
+  };
+}
+
 export const userSignIn = async ({
   email,
   password,
 }: {
   email: string;
   password: string;
-}): Promise<AxiosResponse<unknown>> => {
+}): Promise<AxiosResponse<SignInResponseData>> => {
   try {
-    const response = await axios.post<unknown>(`${authURL}/login`, {
+    const response = await axios.post<SignInResponseData>(`${authURL}/login`, {
       email,
       password,
+    });
+    return response;
+  } catch (err) {
+    if (axios.isAxiosError(err) && err.response) {
+      return err.response as AxiosResponse<SignInResponseData>;
+    }
+    throw err;
+  }
+};
+
+export const userGoogleSignIn = async ({
+  email,
+  appwriteId,
+}: {
+  email: string;
+  appwriteId: string;
+}): Promise<AxiosResponse<SignInResponseData>> => {
+  try {
+    const response = await axios.post<SignInResponseData>(
+      `${authURL}/login/appwrite`,
+      {
+        email,
+        appwriteId,
+      }
+    );
+    return response;
+  } catch (err) {
+    if (axios.isAxiosError(err) && err.response) {
+      return err.response as AxiosResponse<SignInResponseData>;
+    }
+    throw err;
+  }
+};
+
+export const resendVerification = async (email: string) => {
+  try {
+    const response = await axios.post(`${authURL}/resend-verification`, {
+      email,
     });
     return response;
   } catch (err) {
@@ -28,12 +82,14 @@ export const userSignUp = async ({
   firstName,
   lastName,
   password,
+  appwriteId,
   terms,
 }: {
   email: string;
   firstName: string;
   lastName: string;
   password: string;
+  appwriteId?: string;
   terms: boolean;
 }): Promise<AxiosResponse<unknown>> => {
   try {
@@ -42,6 +98,7 @@ export const userSignUp = async ({
       firstName,
       lastName,
       password,
+      appwriteId,
       terms,
     });
     return response;
