@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Flex, Spinner } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
 import { MdEmail, MdLock } from 'react-icons/md';
-import { FaEye, FaGoogle, FaFacebookF, FaXTwitter } from 'react-icons/fa6';
+import { FaEye, FaGoogle } from 'react-icons/fa6';
 import TextInput from '@/components/input/input';
 import Typography from '@/components/typography/typography';
 import Button from '@/components/button/button';
@@ -13,6 +13,7 @@ import { StyledCheckbox, StyledLink, Wrapper, BoxOr } from './style';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { account } from '@/lib/appwrite';
 import { OAuthProvider } from 'appwrite';
+import { FaGithub } from 'react-icons/fa';
 
 interface FormDataSignIn {
   email: string;
@@ -41,13 +42,15 @@ export default function SignInPage() {
   const onSubmit = async (data: FormDataSignIn) => {
     try {
       const response = await userSignIn(data);
-      if (response.status >= 400) {
-        setErrorLogin(true);
-      }
+
       if (response.status === 200) {
         document.cookie = `accessToken=${response.data.accessToken}; path=/; Secure; SameSite=Strict;`;
         document.cookie = `refreshToken=${response.data.refreshToken}; path=/; Secure; SameSite=Strict;`;
         router.push('/');
+      } else if (response.status === 403) {
+        router.push(`/verify/${data.email}`);
+      } else if (response.status >= 400) {
+        setErrorLogin(true);
       }
     } catch (err) {
       console.error(err);
@@ -63,7 +66,18 @@ export default function SignInPage() {
     );
   };
 
+  const handleGithubLogin = () => {
+    setLoading(true);
+    account.createOAuth2Session(
+      OAuthProvider.Github,
+      'http://localhost:3000/signIn?socialMedia=true',
+      'http://localhost:3000/signIn?socialMedia=false'
+    );
+  };
+
   useEffect(() => {
+    if (!search) return;
+
     const params = new URLSearchParams(searchParams.toString());
     account
       .get()
@@ -72,7 +86,7 @@ export default function SignInPage() {
         if (data) {
           const response = await userGoogleSignIn({
             email: data.email,
-            googleId: data.$id,
+            appwriteId: data.$id,
           });
           if (response.status === 200) {
             if (params.has('socialMedia')) {
@@ -83,6 +97,8 @@ export default function SignInPage() {
             document.cookie = `accessToken=${response.data.accessToken}; path=/; Secure; SameSite=Strict;`;
             document.cookie = `refreshToken=${response.data.refreshToken}; path=/; Secure; SameSite=Strict;`;
             router.push('/');
+          } else if (response.status === 403) {
+            router.push(`/verify/${data.email}`);
           } else if (response.status === 404) {
             const [firstName, lastName] = data.name.split(' ');
             if (params.has('socialMedia')) {
@@ -91,7 +107,9 @@ export default function SignInPage() {
               window.history.replaceState(null, '', newUrl);
             }
             router.push(
-              `/signUp?socialMedia=true&step=2&email=${encodeURIComponent(data.email)}&googleId=${encodeURIComponent(
+              `/signUp?socialMedia=true&step=2&email=${encodeURIComponent(
+                data.email
+              )}&appwriteId=${encodeURIComponent(
                 data.$id
               )}&firstName=${encodeURIComponent(firstName)}&lastName=${encodeURIComponent(lastName)}`
             );
@@ -106,7 +124,7 @@ export default function SignInPage() {
       .finally(() => {
         setLoading(false);
       });
-  }, [router, searchParams]);
+  }, [router, search, searchParams]);
 
   if (loading) {
     return (
@@ -141,6 +159,7 @@ export default function SignInPage() {
         <form onSubmit={handleSubmit(onSubmit)}>
           <Flex flexDirection="column" gap="35px">
             <TextInput
+              type="email"
               title="Email"
               iconElement={MdEmail}
               placeholder="Enter your email"
@@ -197,17 +216,10 @@ export default function SignInPage() {
             variant="IconButton"
             backgound="#ECEEF5"
             color="#8083A3"
-            iconElement={FaFacebookF}
+            iconElement={FaGithub}
+            onClick={handleGithubLogin}
           >
-            Sign In with Facebook
-          </Button>
-          <Button
-            variant="IconButton"
-            backgound="#ECEEF5"
-            color="#8083A3"
-            iconElement={FaXTwitter}
-          >
-            Sign In with X
+            Sign Up with GitHub
           </Button>
         </Flex>
       </Wrapper>

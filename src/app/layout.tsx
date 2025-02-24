@@ -24,7 +24,7 @@ export default function RootLayout({
         <link
           rel="icon"
           type="image/svg+xml"
-          href="favicon.svg"
+          href="/favicon.svg"
           sizes="16x16"
         ></link>
         <title>BetaCall</title>

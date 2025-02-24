@@ -34,7 +34,7 @@ export default function Header() {
               <Image
                 height={'45px'}
                 width={'45px'}
-                src="favicon.svg"
+                src="/favicon.svg"
                 alt="Icon"
               />
               <Text fontSize={'28px'}>

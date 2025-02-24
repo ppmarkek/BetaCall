@@ -19,13 +19,16 @@ export default function SignUpPage() {
   const search = searchParams.get('socialMedia');
   const [step, setStep] = useState(0);
   const [email, setEmail] = useState('');
-  const [googleId, setGoogleId] = useState('');
+  const [appwriteId, setAppwriteId] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const [terms, setTerms] = useState(false);
   const [loading, setLoading] = useState(search ? true : false);
   const router = useRouter();
 
   useEffect(() => {
+    if (!search) return;
+
     account
       .get()
       .then(async (data) => {
@@ -33,20 +36,20 @@ export default function SignUpPage() {
         params.delete('socialMedia');
         const newUrl = `?${params.toString()}`;
         window.history.replaceState(null, '', newUrl);
-
-        setLoading(true);
         if (data) {
           const response = await userGoogleSignIn({
             email: data.email,
-            googleId: data.$id,
+            appwriteId: data.$id,
           });
           if (response.status === 200) {
             document.cookie = `accessToken=${response.data.accessToken}; path=/; Secure; SameSite=Strict;`;
             document.cookie = `refreshToken=${response.data.refreshToken}; path=/; Secure; SameSite=Strict;`;
             router.push('/');
+          } else if (response.status === 403) {
+            router.push(`/verify/${data.email}`);
           } else if (response.status === 404) {
             setEmail(data.email);
-            setGoogleId(data.$id);
+            setAppwriteId(data.$id);
             setFirstName(data.name.split(' ')[0]);
             setLastName(data.name.split(' ')[1]);
             setStep(1);
@@ -58,14 +61,13 @@ export default function SignUpPage() {
           setLoading(false);
           return;
         } else {
-          setLoading(false);
           console.error('Error fetching google account data:', error);
         }
       })
       .finally(() => {
         setLoading(false);
       });
-  }, [router, searchParams]);
+  }, [email, router, search, searchParams]);
 
   useEffect(() => {
     const handleBeforeUnload = () => {
@@ -109,6 +111,7 @@ export default function SignUpPage() {
             <StepOne
               nextStep={(data: FormDataStepOne) => {
                 setEmail(data.email);
+                setTerms(data.terms);
                 setStep(1);
               }}
               setLoading={setLoading}
@@ -117,11 +120,13 @@ export default function SignUpPage() {
 
           <StepsContent index={1}>
             <StepTwo
+              setLoading={(value) => setLoading(value)}
               nextStep={() => setStep(2)}
               email={email}
-              googleId={googleId}
+              appwriteId={appwriteId}
               firstName={firstName}
               lastName={lastName}
+              terms={terms}
             />
           </StepsContent>
           <StepsContent index={2}>

@@ -2,18 +2,12 @@ import { useEffect, useState } from 'react';
 import { Flex, Grid, Image } from '@chakra-ui/react';
 import { useForm, Controller } from 'react-hook-form';
 import { MdEmail, MdLock } from 'react-icons/md';
-import {
-  FaGoogle,
-  FaFacebookF,
-  FaUserAlt,
-  FaCheckCircle,
-} from 'react-icons/fa';
-import { FaXTwitter } from 'react-icons/fa6';
+import { FaGoogle, FaUserAlt, FaCheckCircle, FaGithub } from 'react-icons/fa';
 import TextInput from '@/components/input/input';
 import Typography from '@/components/typography/typography';
 import Button from '@/components/button/button';
 import { BoxOr, StyledCheckbox, StyledLink } from './style';
-import { userSignUp } from '../api/auth/route';
+import { resendVerification, userSignUp } from '../api/auth/route';
 import { OAuthProvider } from 'appwrite';
 import { account } from '@/lib/appwrite';
 
@@ -38,9 +32,11 @@ interface StepOneProps {
 
 interface StepTwoProps {
   email?: string;
-  googleId?: string;
+  appwriteId?: string;
   firstName?: string;
   lastName?: string;
+  terms?: boolean;
+  setLoading: (value: boolean) => void;
   nextStep: () => void;
 }
 
@@ -78,6 +74,15 @@ export const StepOne = ({ nextStep, setLoading }: StepOneProps) => {
     );
   };
 
+  const handleGithubLogin = () => {
+    setLoading(true);
+    account.createOAuth2Session(
+      OAuthProvider.Github,
+      'http://localhost:3000/signUp?socialMedia=true',
+      'http://localhost:3000/signUp?socialMedia=false'
+    );
+  };
+
   return (
     <Flex flexDirection="column" gap="50px">
       <Flex flexDirection="column" gap="10px">
@@ -93,6 +98,7 @@ export const StepOne = ({ nextStep, setLoading }: StepOneProps) => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <Flex flexDirection="column" gap="35px">
           <TextInput
+            type="email"
             title="Email"
             iconElement={MdEmail}
             placeholder="Enter your email"
@@ -148,17 +154,10 @@ export const StepOne = ({ nextStep, setLoading }: StepOneProps) => {
           variant="IconButton"
           backgound="#ECEEF5"
           color="#8083A3"
-          iconElement={FaFacebookF}
+          iconElement={FaGithub}
+          onClick={handleGithubLogin}
         >
-          Sign Up with Facebook
-        </Button>
-        <Button
-          variant="IconButton"
-          backgound="#ECEEF5"
-          color="#8083A3"
-          iconElement={FaXTwitter}
-        >
-          Sign Up with X
+          Sign Up with GitHub
         </Button>
       </Flex>
     </Flex>
@@ -167,10 +166,12 @@ export const StepOne = ({ nextStep, setLoading }: StepOneProps) => {
 
 export const StepTwo = ({
   email,
-  googleId,
+  appwriteId,
   firstName,
   lastName,
+  terms,
   nextStep,
+  setLoading,
 }: StepTwoProps) => {
   const [emailExist, setEmailExist] = useState(false);
   const {
@@ -186,21 +187,25 @@ export const StepTwo = ({
   });
 
   useEffect(() => {
-    reset({ email, firstName, lastName });
-  }, [email, firstName, lastName, reset]);
+    reset({ email, firstName, lastName, terms });
+  }, [email, firstName, lastName, terms, reset]);
 
   const onSubmit = async (data: FormDataStepTwo) => {
     try {
+      setLoading(true);
       const response = await userSignUp({
         email: data.email,
         firstName: data.firstName,
         lastName: data.lastName,
         password: data.password,
-        googleId: googleId,
+        appwriteId: appwriteId,
         terms: data.terms,
       });
       if (response.status >= 400) setEmailExist(true);
-      if (response.status === 201) nextStep();
+      if (response.status === 201) {
+        setLoading(false);
+        nextStep();
+      }
     } catch (err) {
       console.error(err);
     }
@@ -231,6 +236,7 @@ export const StepTwo = ({
             render={({ field }) => (
               <TextInput
                 {...field}
+                type="email"
                 title="Email"
                 iconElement={MdEmail}
                 placeholder="Enter your email"
@@ -348,7 +354,9 @@ export const StepThree = ({ email }: StepThreeProps) => {
           Click the confirmation link in the email to verify your account
         </Typography>
       </Flex>
-      <StyledLink>Resend Email</StyledLink>
+      <StyledLink onClick={() => resendVerification(email)}>
+        Resend Email
+      </StyledLink>
     </Flex>
   );
 };

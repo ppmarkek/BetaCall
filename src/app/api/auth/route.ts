@@ -41,17 +41,17 @@ export const userSignIn = async ({
 
 export const userGoogleSignIn = async ({
   email,
-  googleId,
+  appwriteId,
 }: {
   email: string;
-  googleId: string;
+  appwriteId: string;
 }): Promise<AxiosResponse<SignInResponseData>> => {
   try {
     const response = await axios.post<SignInResponseData>(
-      `${authURL}/login/google`,
+      `${authURL}/login/appwrite`,
       {
         email,
-        googleId,
+        appwriteId,
       }
     );
     return response;
@@ -63,19 +63,33 @@ export const userGoogleSignIn = async ({
   }
 };
 
+export const resendVerification = async (email: string) => {
+  try {
+    const response = await axios.post(`${authURL}/resend-verification`, {
+      email,
+    });
+    return response;
+  } catch (err) {
+    if (axios.isAxiosError(err) && err.response) {
+      return err.response as AxiosResponse<unknown>;
+    }
+    throw err;
+  }
+};
+
 export const userSignUp = async ({
   email,
   firstName,
   lastName,
   password,
-  googleId,
+  appwriteId,
   terms,
 }: {
   email: string;
   firstName: string;
   lastName: string;
   password: string;
-  googleId?: string;
+  appwriteId?: string;
   terms: boolean;
 }): Promise<AxiosResponse<unknown>> => {
   try {
@@ -84,7 +98,7 @@ export const userSignUp = async ({
       firstName,
       lastName,
       password,
-      googleId,
+      appwriteId,
       terms,
     });
     return response;
