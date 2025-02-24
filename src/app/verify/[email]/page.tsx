@@ -80,11 +80,11 @@ const VerifyEmail = () => {
           )}
         </Flex>
         {beenVerified ? (
+          <StyledLink href="/signIn">Sign In</StyledLink>
+        ) : (
           <StyledLink onClick={() => handleResendVerification(decodedEmail)}>
             Resend Email
           </StyledLink>
-        ) : (
-          <StyledLink href="/signIn">Sign In</StyledLink>
         )}
       </Flex>
     </Flex>
