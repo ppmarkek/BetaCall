@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Flex, Spinner } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
 import { MdEmail, MdLock } from 'react-icons/md';
-import { FaGoogle,  FaGithub } from 'react-icons/fa';
+import { FaGoogle, FaGithub } from 'react-icons/fa';
 import { FaEye } from 'react-icons/fa6';
 import TextInput from '@/components/input/input';
 import Typography from '@/components/typography/typography';
@@ -14,7 +14,6 @@ import { StyledCheckbox, StyledLink, Wrapper, BoxOr } from './style';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { account } from '@/lib/appwrite';
 import { OAuthProvider } from 'appwrite';
-
 
 interface FormDataSignIn {
   email: string;
@@ -203,7 +202,7 @@ export default function SignInPage() {
               </Flex>
               <StyledLink href="/recoverPassword">Recover password</StyledLink>
             </Flex>
-            <Button backgound="#6B59CC" type="submit">
+            <Button background="#6B59CC" type="submit">
               Sign In
             </Button>
           </Flex>
@@ -216,7 +215,7 @@ export default function SignInPage() {
         <Flex flexDirection="column" width="100%" gap="10px">
           <Button
             variant="IconButton"
-            backgound="#ECEEF5"
+            background="#ECEEF5"
             color="#8083A3"
             iconElement={FaGoogle}
             onClick={handleGoogleLogin}
@@ -225,7 +224,7 @@ export default function SignInPage() {
           </Button>
           <Button
             variant="IconButton"
-            backgound="#ECEEF5"
+            background="#ECEEF5"
             color="#8083A3"
             iconElement={FaGithub}
             onClick={handleGithubLogin}

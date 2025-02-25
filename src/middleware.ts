@@ -17,7 +17,7 @@ export function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  if (pathname.startsWith('/verify/')) {
+  if (pathname.startsWith('/verify/') || pathname.startsWith('/resetPassword/')) {
     return NextResponse.next();
   }
 

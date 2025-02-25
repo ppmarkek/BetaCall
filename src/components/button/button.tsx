@@ -13,7 +13,7 @@ type ButtonProps = {
   variant?: 'Filled' | 'Outline' | 'IconButton' | Variant;
   color?: string;
   width?: string;
-  backgound?: string;
+  background?: string;
   height?: string;
   iconElement?: IconType;
   children?: React.ReactNode;
@@ -24,7 +24,7 @@ export default function Button({
   color,
   width,
   height,
-  backgound,
+  background,
   children,
   iconElement,
   ...rest
@@ -37,7 +37,7 @@ export default function Button({
         <FilledButton
           buttonHeight={height}
           buttonWidth={width}
-          bgColor={backgound}
+          bgColor={background}
           textColor={color}
           {...rest}
         >
@@ -49,7 +49,7 @@ export default function Button({
         <OutlineButton
           buttonHeight={height}
           buttonWidth={width}
-          bgColor={backgound}
+          bgColor={background}
           textColor={color}
           {...rest}
         >
@@ -70,7 +70,7 @@ export default function Button({
         <FilledButton
           buttonHeight={height}
           buttonWidth={width}
-          bgColor={backgound}
+          bgColor={background}
           textColor={color}
           {...rest}
         >

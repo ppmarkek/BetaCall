@@ -12,6 +12,7 @@ import { resendVerification, userSignUp } from '../api/auth/route';
 import { OAuthProvider } from 'appwrite';
 import { account } from '@/lib/appwrite';
 import { useSearchParams } from 'next/navigation';
+import { validatePassword } from '@/validation/validation';
 
 interface FormDataStepOne {
   email: string;
@@ -46,19 +47,6 @@ interface StepTwoProps {
 interface StepThreeProps {
   email: string;
 }
-
-const validatePassword = (value: string): true | string => {
-  if (value.length < 6) {
-    return 'Password must be at least 6 characters';
-  }
-  if (!/(?=.*[A-Z])/.test(value)) {
-    return 'Password must contain at least one uppercase letter';
-  }
-  if (!/(?=.*[!@#$%^&*])/.test(value)) {
-    return 'Password must contain at least one special character';
-  }
-  return true;
-};
 
 const encrypt = (str: string): string => {
   try {
@@ -149,7 +137,7 @@ export const StepOne = ({ nextStep, setLoading }: StepOneProps) => {
             </Typography>
           </Flex>
 
-          <Button backgound="#6B59CC" type="submit">
+          <Button background="#6B59CC" type="submit">
             Sign Up
           </Button>
         </Flex>
@@ -164,7 +152,7 @@ export const StepOne = ({ nextStep, setLoading }: StepOneProps) => {
       <Flex flexDirection="column" width="100%" gap="10px">
         <Button
           variant="IconButton"
-          backgound="#ECEEF5"
+          background="#ECEEF5"
           color="#8083A3"
           iconElement={FaGoogle}
           onClick={handleGoogleLogin}
@@ -173,7 +161,7 @@ export const StepOne = ({ nextStep, setLoading }: StepOneProps) => {
         </Button>
         <Button
           variant="IconButton"
-          backgound="#ECEEF5"
+          background="#ECEEF5"
           color="#8083A3"
           iconElement={FaGithub}
           onClick={handleGithubLogin}
@@ -411,7 +399,7 @@ export const StepTwo = ({
             </Typography>
           </Flex>
 
-          <Button backgound="#6B59CC" type="submit">
+          <Button background="#6B59CC" type="submit">
             Continue
           </Button>
         </Flex>

@@ -47,7 +47,7 @@ function Header() {
                 <Button
                   height={'40px'}
                   variant="Outline"
-                  backgound={'#ECEEF5'}
+                  background={'#ECEEF5'}
                   color={'#8083A3'}
                 >
                   {pathname === '/signIn' ? 'Sign Up' : 'Sign In'}
