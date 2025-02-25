@@ -4,7 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { Flex, Spinner } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
 import { MdEmail, MdLock } from 'react-icons/md';
-import { FaEye, FaGoogle } from 'react-icons/fa6';
+import { FaGoogle,  FaGithub } from 'react-icons/fa';
+import { FaEye } from 'react-icons/fa6';
 import TextInput from '@/components/input/input';
 import Typography from '@/components/typography/typography';
 import Button from '@/components/button/button';
@@ -13,7 +14,7 @@ import { StyledCheckbox, StyledLink, Wrapper, BoxOr } from './style';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { account } from '@/lib/appwrite';
 import { OAuthProvider } from 'appwrite';
-import { FaGithub } from 'react-icons/fa';
+
 
 interface FormDataSignIn {
   email: string;
@@ -23,10 +24,10 @@ interface FormDataSignIn {
 
 export default function SignInPage() {
   const searchParams = useSearchParams();
-  const search = searchParams.get('socialMedia');
+  const socialMediaParam = searchParams.get('socialMedia');
   const [showPassword, setShowPassword] = useState(false);
   const [errorLogin, setErrorLogin] = useState(false);
-  const [loading, setLoading] = useState(search ? true : false);
+  const [loading, setLoading] = useState(Boolean(socialMediaParam));
   const router = useRouter();
 
   const {
@@ -35,11 +36,10 @@ export default function SignInPage() {
     formState: { errors },
   } = useForm<FormDataSignIn>();
 
-  const togglePasswordVisibility: () => void = () => {
-    setShowPassword((prev) => !prev);
-  };
+  const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
 
   const onSubmit = async (data: FormDataSignIn) => {
+    setLoading(true);
     try {
       const response = await userSignIn(data);
 
@@ -47,14 +47,17 @@ export default function SignInPage() {
         document.cookie = `accessToken=${response.data.accessToken}; path=/; Secure; SameSite=Strict;`;
         document.cookie = `refreshToken=${response.data.refreshToken}; path=/; Secure; SameSite=Strict;`;
         router.push('/');
+        return;
       } else if (response.status === 403) {
         router.push(`/verify/${data.email}`);
+        return;
       } else if (response.status >= 400) {
         setErrorLogin(true);
       }
     } catch (err) {
       console.error(err);
     }
+    setLoading(false);
   };
 
   const handleGoogleLogin = () => {
@@ -76,13 +79,14 @@ export default function SignInPage() {
   };
 
   useEffect(() => {
-    if (!search) return;
+    if (!socialMediaParam) return;
 
     const params = new URLSearchParams(searchParams.toString());
+    let navigated = false;
+
     account
       .get()
       .then(async (data) => {
-        setLoading(true);
         if (data) {
           const response = await userGoogleSignIn({
             email: data.email,
@@ -97,8 +101,10 @@ export default function SignInPage() {
             document.cookie = `accessToken=${response.data.accessToken}; path=/; Secure; SameSite=Strict;`;
             document.cookie = `refreshToken=${response.data.refreshToken}; path=/; Secure; SameSite=Strict;`;
             router.push('/');
+            navigated = true;
           } else if (response.status === 403) {
             router.push(`/verify/${data.email}`);
+            navigated = true;
           } else if (response.status === 404) {
             const [firstName, lastName] = data.name.split(' ');
             if (params.has('socialMedia')) {
@@ -111,8 +117,11 @@ export default function SignInPage() {
                 data.email
               )}&appwriteId=${encodeURIComponent(
                 data.$id
-              )}&firstName=${encodeURIComponent(firstName)}&lastName=${encodeURIComponent(lastName)}`
+              )}&firstName=${encodeURIComponent(
+                firstName
+              )}&lastName=${encodeURIComponent(lastName)}`
             );
+            navigated = true;
           }
         }
       })
@@ -122,9 +131,11 @@ export default function SignInPage() {
         }
       })
       .finally(() => {
-        setLoading(false);
+        if (!navigated) {
+          setLoading(false);
+        }
       });
-  }, [router, search, searchParams]);
+  }, [router, socialMediaParam, searchParams]);
 
   if (loading) {
     return (

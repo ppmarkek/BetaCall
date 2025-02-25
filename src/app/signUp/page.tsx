@@ -23,12 +23,13 @@ export default function SignUpPage() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [terms, setTerms] = useState(false);
-  const [loading, setLoading] = useState(search ? true : false);
+  const [loading, setLoading] = useState(Boolean(search));
   const router = useRouter();
 
   useEffect(() => {
     if (!search) return;
 
+    let navigated = false;
     account
       .get()
       .then(async (data) => {
@@ -45,8 +46,10 @@ export default function SignUpPage() {
             document.cookie = `accessToken=${response.data.accessToken}; path=/; Secure; SameSite=Strict;`;
             document.cookie = `refreshToken=${response.data.refreshToken}; path=/; Secure; SameSite=Strict;`;
             router.push('/');
+            navigated = true;
           } else if (response.status === 403) {
             router.push(`/verify/${data.email}`);
+            navigated = true;
           } else if (response.status === 404) {
             setEmail(data.email);
             setAppwriteId(data.$id);
@@ -65,7 +68,9 @@ export default function SignUpPage() {
         }
       })
       .finally(() => {
-        setLoading(false);
+        if (!navigated) {
+          setLoading(false);
+        }
       });
   }, [email, router, search, searchParams]);
 
@@ -120,8 +125,9 @@ export default function SignUpPage() {
 
           <StepsContent index={1}>
             <StepTwo
-              setLoading={(value) => setLoading(value)}
+              setLoading={setLoading}
               nextStep={() => setStep(2)}
+              setEmail={(email) => setEmail(email)}
               email={email}
               appwriteId={appwriteId}
               firstName={firstName}

@@ -5,7 +5,13 @@ const publicRoutes = ['/signUp', '/signIn'];
 
 export function middleware(req: NextRequest) {
   const isAuthenticated = req.cookies.get('accessToken')?.value;
-  const { pathname } = req.nextUrl;
+  const { pathname, search } = req.nextUrl;
+
+  if (pathname === '/signUp' && search && !search.includes('socialMedia')) {
+    const url = req.nextUrl.clone();
+    url.search = '';
+    return NextResponse.redirect(url);
+  }
 
   if (/\.[^/]+$/.test(pathname)) {
     return NextResponse.next();

@@ -1,13 +1,13 @@
 'use client';
 
 import { Box, Flex, Grid, GridItem, Image, Text } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import Button from '../button/button';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 // import Typography from '../typography/typography';
 
-export default function Header() {
+function Header() {
   const pathname = usePathname();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
@@ -67,3 +67,5 @@ export default function Header() {
     </>
   );
 }
+
+export default memo(Header);

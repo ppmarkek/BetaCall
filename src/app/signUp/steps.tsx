@@ -3,6 +3,7 @@ import { Flex, Grid, Image } from '@chakra-ui/react';
 import { useForm, Controller } from 'react-hook-form';
 import { MdEmail, MdLock } from 'react-icons/md';
 import { FaGoogle, FaUserAlt, FaCheckCircle, FaGithub } from 'react-icons/fa';
+import { FaEye } from 'react-icons/fa6';
 import TextInput from '@/components/input/input';
 import Typography from '@/components/typography/typography';
 import Button from '@/components/button/button';
@@ -10,6 +11,7 @@ import { BoxOr, StyledCheckbox, StyledLink } from './style';
 import { resendVerification, userSignUp } from '../api/auth/route';
 import { OAuthProvider } from 'appwrite';
 import { account } from '@/lib/appwrite';
+import { useSearchParams } from 'next/navigation';
 
 interface FormDataStepOne {
   email: string;
@@ -37,6 +39,7 @@ interface StepTwoProps {
   lastName?: string;
   terms?: boolean;
   setLoading: (value: boolean) => void;
+  setEmail: (value: string) => void;
   nextStep: () => void;
 }
 
@@ -55,6 +58,24 @@ const validatePassword = (value: string): true | string => {
     return 'Password must contain at least one special character';
   }
   return true;
+};
+
+const encrypt = (str: string): string => {
+  try {
+    return btoa(str);
+  } catch (e) {
+    console.error('Encryption failed', e);
+    return str;
+  }
+};
+
+const decrypt = (str: string): string => {
+  try {
+    return atob(str);
+  } catch (e) {
+    console.error('Decryption failed', e);
+    return str;
+  }
 };
 
 export const StepOne = ({ nextStep, setLoading }: StepOneProps) => {
@@ -165,15 +186,40 @@ export const StepOne = ({ nextStep, setLoading }: StepOneProps) => {
 };
 
 export const StepTwo = ({
-  email,
+  email: initialEmail,
   appwriteId,
-  firstName,
-  lastName,
-  terms,
+  firstName: initialFirstName,
+  lastName: initialLastName,
+  terms: initialTerms,
   nextStep,
+  setEmail,
   setLoading,
 }: StepTwoProps) => {
-  const [emailExist, setEmailExist] = useState(false);
+  const searchParams = useSearchParams();
+
+  const defaultEmail = searchParams.get('email') ?? initialEmail ?? '';
+  const defaultFirstName =
+    searchParams.get('firstName') ?? initialFirstName ?? '';
+  const defaultLastName = searchParams.get('lastName') ?? initialLastName ?? '';
+  const defaultTerms =
+    searchParams.get('terms') !== null
+      ? searchParams.get('terms') === 'true'
+      : initialTerms || false;
+  const defaultPasswordEnc = searchParams.get('password');
+  const defaultPassword = defaultPasswordEnc ? decrypt(defaultPasswordEnc) : '';
+  const defaultEmailExist =
+    searchParams.get('emailExist') !== null
+      ? searchParams.get('emailExist') === 'true'
+      : false;
+
+  const [emailExist, setEmailExist] = useState<boolean>(defaultEmailExist);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
+  const toggleConfirmPasswordVisibility = () =>
+    setShowConfirmPassword((prev) => !prev);
+
   const {
     control,
     register,
@@ -183,12 +229,35 @@ export const StepTwo = ({
     formState: { errors },
   } = useForm<FormDataStepTwo>({
     mode: 'onBlur',
-    defaultValues: { email },
+    defaultValues: {
+      email: defaultEmail,
+      firstName: defaultFirstName,
+      lastName: defaultLastName,
+      terms: defaultTerms,
+      password: defaultPassword,
+      confirmPassword: defaultPassword,
+    },
   });
 
   useEffect(() => {
-    reset({ email, firstName, lastName, terms });
-  }, [email, firstName, lastName, terms, reset]);
+    reset({
+      email: defaultEmail,
+      firstName: defaultFirstName,
+      lastName: defaultLastName,
+      terms: defaultTerms,
+      password: defaultPassword,
+      confirmPassword: defaultPassword,
+    });
+  }, [
+    defaultEmail,
+    defaultFirstName,
+    defaultLastName,
+    defaultTerms,
+    defaultPassword,
+    reset,
+  ]);
+
+  const password = watch('password');
 
   const onSubmit = async (data: FormDataStepTwo) => {
     try {
@@ -198,20 +267,35 @@ export const StepTwo = ({
         firstName: data.firstName,
         lastName: data.lastName,
         password: data.password,
-        appwriteId: appwriteId,
+        appwriteId,
         terms: data.terms,
       });
-      if (response.status >= 400) setEmailExist(true);
-      if (response.status === 201) {
+
+      const params = new URLSearchParams();
+      params.set('email', data.email);
+      params.set('firstName', data.firstName);
+      params.set('lastName', data.lastName);
+      params.set('terms', String(data.terms));
+      params.set('password', encrypt(data.password));
+      params.set('confirmPassword', encrypt(data.confirmPassword));
+      params.set('emailExist', String(response.status === 400));
+      window.history.replaceState(null, '', '?' + params.toString());
+
+      if (response.status === 400) {
+        setEmailExist(true);
         setLoading(false);
+      } else if (response.status === 201) {
+        setEmailExist(false);
+        setEmail(data.email);
+        setLoading(false);
+        window.history.replaceState(null, '', window.location.pathname);
         nextStep();
       }
     } catch (err) {
+      setLoading(false);
       console.error(err);
     }
   };
-
-  const password = watch('password');
 
   return (
     <Flex flexDirection="column" gap="50px">
@@ -221,8 +305,8 @@ export const StepTwo = ({
           Enter your details to proceed further
         </Typography>
         {emailExist && (
-          <Typography color={'#ff808b'}>
-            A user with the same email already exists
+          <Typography color="#ff808b">
+            A user with this email already exists
           </Typography>
         )}
       </Flex>
@@ -232,7 +316,6 @@ export const StepTwo = ({
           <Controller
             control={control}
             name="email"
-            defaultValue={email}
             render={({ field }) => (
               <TextInput
                 {...field}
@@ -250,11 +333,10 @@ export const StepTwo = ({
             <Controller
               control={control}
               name="firstName"
-              defaultValue={firstName}
               render={({ field }) => (
                 <TextInput
                   {...field}
-                  title="First name"
+                  title="First Name"
                   iconElement={FaUserAlt}
                   placeholder="Enter your first name"
                   error={!!errors.firstName}
@@ -269,11 +351,10 @@ export const StepTwo = ({
             <Controller
               control={control}
               name="lastName"
-              defaultValue={lastName}
               render={({ field }) => (
                 <TextInput
                   {...field}
-                  title="Last name"
+                  title="Last Name"
                   iconElement={FaUserAlt}
                   placeholder="Enter your last name"
                   error={!!errors.lastName}
@@ -288,11 +369,12 @@ export const StepTwo = ({
 
           <TextInput
             title="Password"
-            iconElement={MdLock}
+            iconElement={showPassword ? FaEye : MdLock}
             placeholder="Enter your password"
-            type="password"
+            type={showPassword ? 'text' : 'password'}
             error={!!errors.password}
             errorText={errors.password?.message}
+            onIconClick={togglePasswordVisibility}
             {...register('password', {
               required: 'Password is required',
               validate: validatePassword,
@@ -300,12 +382,13 @@ export const StepTwo = ({
           />
 
           <TextInput
-            title="Confirm password"
-            iconElement={FaCheckCircle}
+            title="Confirm Password"
+            iconElement={showConfirmPassword ? FaEye : FaCheckCircle}
             placeholder="Confirm your password"
-            type="password"
+            type={showConfirmPassword ? 'text' : 'password'}
             error={!!errors.confirmPassword}
             errorText={errors.confirmPassword?.message}
+            onIconClick={toggleConfirmPasswordVisibility}
             {...register('confirmPassword', {
               required: 'Please confirm your password',
               validate: (value) =>
@@ -317,14 +400,14 @@ export const StepTwo = ({
             <StyledCheckbox
               type="checkbox"
               {...register('terms', {
-                required: 'You must agree to the terms and conditions',
+                required: 'You must agree to the terms',
               })}
             />
             <Typography
               weight="Bold"
               color={errors.terms ? '#ff808b' : '#1A1C1D'}
             >
-              I agree with terms &amp; conditions
+              I agree to the terms
             </Typography>
           </Flex>
 
