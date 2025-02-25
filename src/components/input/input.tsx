@@ -60,7 +60,7 @@ export default function TextInput({
           right={0}
           bottom={'8px'}
           fontSize={'20px'}
-          cursor="pointer"
+          cursor={onIconClick ? 'pointer' : 'default'}
           onClick={onIconClick}
         >
           <IconComponent />
