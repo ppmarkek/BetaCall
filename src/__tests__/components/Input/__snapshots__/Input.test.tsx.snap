@@ -1,0 +1,263 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Styled Components (style.ts) matches snapshot with custom color 1`] = `
+.emotion-0 {
+  color: #000;
+  padding: 20px 0px;
+  padding-left: 0px;
+  padding-right: 0px;
+  border: unset;
+  border-radius: unset;
+  border-bottom: 1px solid #eceef5;
+  color: #000;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+}
+
+@layer recipes {
+  .emotion-0 {
+    width: 100%;
+    min-width: var(--input-height);
+    outline: 0;
+    position: relative;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    text-align: start;
+    border-radius: var(--chakra-radii-l2);
+    height: var(--input-height);
+    --focus-color: var(--chakra-colors-color-palette-focus-ring);
+    --error-color: var(--chakra-colors-border-error);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    padding-inline: var(--chakra-spacing-3);
+    --input-height: var(--chakra-sizes-10);
+    background: var(--chakra-colors-transparent);
+    --bg-currentcolor: var(--chakra-colors-transparent);
+    border-width: 1px;
+    border-color: var(--chakra-colors-border);
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+  }
+
+  .emotion-0:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-0:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+    --focus-ring-color: var(--error-color);
+    border-color: var(--error-color);
+  }
+
+  .emotion-0:is(:focus-visible, [data-focus-visible]) {
+    outline-offset: 0px;
+    outline-width: var(--focus-ring-width, 1px);
+    outline-color: var(--focus-ring-color);
+    outline-style: var(--focus-ring-style, solid);
+    border-color: var(--focus-ring-color);
+  }
+}
+
+.emotion-0:focus-visible {
+  outline: unset;
+  border-bottom: 1px solid #000;
+}
+
+<div>
+  <input
+    class="chakra-input emotion-0"
+  />
+</div>
+`;
+
+exports[`Styled Components (style.ts) matches snapshot with default color 1`] = `
+.emotion-0 {
+  padding: 20px 0px;
+  padding-left: 0px;
+  padding-right: 0px;
+  border: unset;
+  border-radius: unset;
+  border-bottom: 1px solid #eceef5;
+  color: #1a1c1d;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+}
+
+@layer recipes {
+  .emotion-0 {
+    width: 100%;
+    min-width: var(--input-height);
+    outline: 0;
+    position: relative;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    text-align: start;
+    border-radius: var(--chakra-radii-l2);
+    height: var(--input-height);
+    --focus-color: var(--chakra-colors-color-palette-focus-ring);
+    --error-color: var(--chakra-colors-border-error);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    padding-inline: var(--chakra-spacing-3);
+    --input-height: var(--chakra-sizes-10);
+    background: var(--chakra-colors-transparent);
+    --bg-currentcolor: var(--chakra-colors-transparent);
+    border-width: 1px;
+    border-color: var(--chakra-colors-border);
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+  }
+
+  .emotion-0:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-0:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+    --focus-ring-color: var(--error-color);
+    border-color: var(--error-color);
+  }
+
+  .emotion-0:is(:focus-visible, [data-focus-visible]) {
+    outline-offset: 0px;
+    outline-width: var(--focus-ring-width, 1px);
+    outline-color: var(--focus-ring-color);
+    outline-style: var(--focus-ring-style, solid);
+    border-color: var(--focus-ring-color);
+  }
+}
+
+.emotion-0:focus-visible {
+  outline: unset;
+  border-bottom: 1px solid #000;
+}
+
+<div>
+  <input
+    class="chakra-input emotion-0"
+  />
+</div>
+`;
+
+exports[`Text Input Component matches the snapshot 1`] = `
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  gap: 10px;
+  -webkit-align-items: flex-start;
+  -webkit-box-align: flex-start;
+  -ms-flex-align: flex-start;
+  align-items: flex-start;
+  position: relative;
+}
+
+.emotion-0 .input-icon {
+  fill: #8083a3;
+  -webkit-transition: fill 0.3s;
+  transition: fill 0.3s;
+}
+
+.emotion-0:focus-within .input-icon:not(.input-icon-error) {
+  fill: #1a1c1d;
+}
+
+.emotion-0 .input-icon-error {
+  fill: #ff808b;
+}
+
+.emotion-1 {
+  color: #8083A3;
+  font-family: Lato;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 19px;
+}
+
+.emotion-2 {
+  color: #1a1c1d;
+  padding: 20px 0px;
+  padding-left: 0px;
+  padding-right: 0px;
+  border: unset;
+  border-radius: unset;
+  border-bottom: 1px solid #eceef5;
+  color: #1a1c1d;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+}
+
+@layer recipes {
+  .emotion-2 {
+    width: 100%;
+    min-width: var(--input-height);
+    outline: 0;
+    position: relative;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    text-align: start;
+    border-radius: var(--chakra-radii-l2);
+    height: var(--input-height);
+    --focus-color: var(--chakra-colors-color-palette-focus-ring);
+    --error-color: var(--chakra-colors-border-error);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    padding-inline: var(--chakra-spacing-3);
+    --input-height: var(--chakra-sizes-10);
+    background: var(--chakra-colors-transparent);
+    --bg-currentcolor: var(--chakra-colors-transparent);
+    border-width: 1px;
+    border-color: var(--chakra-colors-border);
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+  }
+
+  .emotion-2:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-2:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+    --focus-ring-color: var(--error-color);
+    border-color: var(--error-color);
+  }
+
+  .emotion-2:is(:focus-visible, [data-focus-visible]) {
+    outline-offset: 0px;
+    outline-width: var(--focus-ring-width, 1px);
+    outline-color: var(--focus-ring-color);
+    outline-style: var(--focus-ring-style, solid);
+    border-color: var(--focus-ring-color);
+  }
+}
+
+.emotion-2:focus-visible {
+  outline: unset;
+  border-bottom: 1px solid #000;
+}
+
+<div>
+  <div
+    class="emotion-0"
+  >
+    <p
+      class="emotion-1"
+    />
+    <input
+      class="chakra-input chakra-tooltip__trigger emotion-2"
+      data-part="trigger"
+      data-scope="tooltip"
+      data-state="closed"
+      dir="ltr"
+      id="tooltip::r5::trigger"
+    />
+  </div>
+</div>
+`;

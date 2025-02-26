@@ -55,6 +55,7 @@ export default function TextInput({
       </Tooltip>
       {IconComponent && (
         <Icon
+          data-testid='icon-textInput'
           className={`input-icon ${error ? 'input-icon-error' : ''}`}
           position={'absolute'}
           right={0}
