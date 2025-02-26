@@ -9,6 +9,9 @@ const customJestConfig: Config = {
   setupFiles: ['<rootDir>/jest.polyfill.ts'],
   setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
   testMatch: ['**/__tests__/**/*.[jt]s?(x)', '**/?(*.)+(spec|test).[jt]s?(x)'],
+  moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/src/$1',
+  },
   testEnvironment: 'jsdom',
   collectCoverage: true,
   collectCoverageFrom: [
