@@ -17,7 +17,7 @@ export const FilledButton = styled(Button)<{
   gap: 10px;
   padding: 0 30px;
   border-radius: 10px;
-  width: ${({ buttonWidth }) => buttonWidth || 'auto'};
+  width: ${({ buttonWidth }) => buttonWidth || '100%'};
   border: 1px solid ${({ bgColor }) => bgColor || '#6B59CC'};
   background: ${({ bgColor }) => bgColor || '#6B59CC'};
   color: ${({ textColor }) => textColor || '#fff'};
@@ -45,7 +45,7 @@ export const OutlineButton = styled(Button)<{
   gap: 10px;
   padding: 0 30px;
   border-radius: 10px;
-  width: ${({ buttonWidth }) => buttonWidth || 'auto'};
+  width: ${({ buttonWidth }) => buttonWidth || '100%'};
   border: 1px solid ${({ bgColor }) => bgColor || '#6B59CC'};
   background: unset;
   color: ${({ textColor }) => textColor || '#fff'};

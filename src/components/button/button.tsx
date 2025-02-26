@@ -60,7 +60,9 @@ export default function Button({
       return (
         <Flex width={'100%'}>
           <IconBox>
-            {IconComponent && <IconComponent fill={'#8083A3'} />}
+            {IconComponent && (
+              <IconComponent data-testid="icon-component" fill={'#8083A3'} />
+            )}
           </IconBox>
           <LeftIconButton {...rest}>{children}</LeftIconButton>
         </Flex>
