@@ -1,0 +1,209 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Header Component matches the snapshot 1`] = `
+.emotion-0 {
+  border-bottom: 1px solid #EEEEEE;
+}
+
+.emotion-1 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0px 270px;
+  height: 80px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
+.emotion-2 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  gap: 15px;
+}
+
+.emotion-3 {
+  object-fit: cover;
+  height: 45px;
+  width: 45px;
+}
+
+.emotion-4 {
+  font-size: 28px;
+}
+
+.emotion-6 {
+  background-color: #ECEEF5;
+  --bg-currentcolor: #ECEEF5;
+  height: 40px;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 20px;
+  font-family: 'Lato',sans-serif;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  gap: 10px;
+  padding: 0 30px;
+  border-radius: 10px;
+  width: 100%;
+  border: 1px solid #ECEEF5;
+  background: unset;
+  color: #8083A3;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+@layer recipes {
+  .emotion-6 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    position: relative;
+    border-radius: var(--chakra-radii-l2);
+    white-space: nowrap;
+    vertical-align: middle;
+    border-width: 1px;
+    border-color: var(--chakra-colors-transparent);
+    cursor: var(--chakra-cursor-button);
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    outline: 0;
+    line-height: 1.25rem;
+    isolation: isolate;
+    font-weight: var(--chakra-font-weights-medium);
+    transition-property: background-color,border-color,color,fill,stroke,opacity,box-shadow,translate,transform;
+    transition-duration: var(--chakra-durations-moderate);
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+    height: var(--chakra-sizes-10);
+    min-width: var(--chakra-sizes-10);
+    font-size: var(--chakra-font-sizes-sm);
+    padding-inline: var(--chakra-spacing-4);
+    gap: var(--chakra-spacing-2);
+    background: var(--chakra-colors-color-palette-solid);
+    --bg-currentcolor: var(--chakra-colors-color-palette-solid);
+    color: var(--chakra-colors-color-palette-contrast);
+  }
+
+  .emotion-6:is(:focus-visible, [data-focus-visible]) {
+    outline-width: var(--focus-ring-width, 2px);
+    outline-offset: var(--focus-ring-offset, 2px);
+    outline-style: var(--focus-ring-style, solid);
+    outline-color: var(--focus-ring-color);
+  }
+
+  .emotion-6:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-6 :where(svg) {
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    width: var(--chakra-sizes-5);
+    height: var(--chakra-sizes-5);
+  }
+
+  .emotion-6:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+    --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+    background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+  }
+
+  @media (hover: hover) {
+    .emotion-6:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+      --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+      background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+      --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    }
+  }
+}
+
+.emotion-6:hover {
+  background: #8083A3;
+  color: #ECEEF5;
+  border: 1px solid #8083a3;
+}
+
+<div>
+  <header
+    data-testid="header-testid"
+  >
+    <div
+      class="emotion-0"
+    >
+      <div
+        class="emotion-1"
+      >
+        <div
+          class="emotion-2"
+        >
+          <img
+            alt="Icon"
+            class="chakra-image emotion-3"
+            src="/favicon.svg"
+          />
+          <p
+            class="emotion-4"
+          >
+            beta
+            <b>
+              call
+            </b>
+          </p>
+        </div>
+        <div
+          class="emotion-5"
+        >
+          <a
+            href="/signIn"
+          >
+            <button
+              class="chakra-button emotion-6"
+              type="button"
+            >
+              Sign In
+            </button>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+</div>
+`;

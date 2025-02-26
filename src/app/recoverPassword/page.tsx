@@ -5,9 +5,9 @@ import TextInput from '@/components/input/input';
 import Typography from '@/components/typography/typography';
 import { Flex, Image, Spinner } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
-import { MdEmail } from 'react-icons/md';
-import { requestResetPassword } from '../api/changeUserData/route';
+import { MdEmail } from 'react-icons/md';;
 import { useState } from 'react';
+import { requestResetPassword } from '../api/userData/route';
 
 interface FormDataRecoverPassword {
   email: string;
