@@ -99,4 +99,9 @@ describe('Recover Password Page - Loading State', () => {
 
     consoleErrorSpy.mockRestore();
   });
+
+  it('matches the snapshot', () => {
+    const { container } = render(<RecoverPasswordPage />);
+    expect(container).toMatchSnapshot();
+  });
 });
