@@ -17,9 +17,6 @@ describe('Auth API', () => {
     jest.restoreAllMocks();
   });
 
-  // ---------------------------
-  // Tests for userSignIn
-  // ---------------------------
   describe('userSignIn - Successful responses', () => {
     it('should return data on successful sign in', async () => {
       const mockResponse: AxiosResponse = {
@@ -171,9 +168,6 @@ describe('Auth API', () => {
     });
   });
 
-  // ---------------------------
-  // Tests for userSignUp
-  // ---------------------------
   describe('userSignUp - Successful responses', () => {
     it('should return data on successful sign up', async () => {
       const mockResponse: AxiosResponse = {
@@ -295,9 +289,6 @@ describe('Auth API', () => {
     });
   });
 
-  // ---------------------------
-  // Tests for userAppwriteSignIn
-  // ---------------------------
   describe('userAppwriteSignIn - Successful responses', () => {
     it('should return data on successful appwrite sign in', async () => {
       const mockResponse: AxiosResponse = {
@@ -395,9 +386,6 @@ describe('Auth API', () => {
     });
   });
 
-  // ---------------------------
-  // Tests for resendVerification
-  // ---------------------------
   describe('resendVerification - Successful responses', () => {
     it('should return data on successful resend verification', async () => {
       const mockResponse: AxiosResponse = {

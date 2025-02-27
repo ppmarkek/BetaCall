@@ -1,4 +1,3 @@
-// __tests__/verify.test.tsx
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '../../../../test-utils';
 import '@testing-library/jest-dom';
@@ -7,16 +6,13 @@ import { resendVerification } from '@/app/api/auth/route';
 import VerifyToken from 'src/app/verify/token/[token]/page';
 import VerifyEmail from 'src/app/verify/[email]/page';
 
-// Create a top-level mockedAxios variable accessible in all tests.
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
-// Mock axios and the resendVerification API
 jest.mock('axios');
 jest.mock('@/app/api/auth/route', () => ({
   resendVerification: jest.fn(),
 }));
 
-// Mock next/navigation hooks
 jest.mock('next/navigation', () => ({
   useParams: jest.fn(),
   useSearchParams: jest.fn(),
@@ -30,7 +26,6 @@ describe('VerifyToken Component', () => {
   });
 
   it('should display spinner while loading', () => {
-    // Simulate an unresolved axios request to maintain the loading state.
     mockedAxios.get.mockImplementation(() => new Promise(() => {}));
     (useParams as jest.Mock).mockReturnValue({ token: 'dummy-token' });
     (useSearchParams as jest.Mock).mockReturnValue({
@@ -98,20 +93,17 @@ describe('VerifyToken Component', () => {
   });
 
   it('should not call axios and remain in loading state if token is missing', async () => {
-    // Simulate no token provided.
     (useParams as jest.Mock).mockReturnValue({ token: undefined });
     (useSearchParams as jest.Mock).mockReturnValue({
       get: jest.fn().mockReturnValue('test@example.com'),
     });
     const { container } = render(<VerifyToken />);
-    // Since token is missing, the spinner remains visible.
     expect(container.querySelector('.chakra-spinner')).toBeInTheDocument();
     expect(mockedAxios.get).not.toHaveBeenCalled();
   });
 
   it('should display "Account verified successfully" after a successful resend action', async () => {
     const errorMessage = 'The link is invalid or expired';
-    // Simulate initial axios failure.
     mockedAxios.get.mockRejectedValueOnce({
       response: { data: { message: errorMessage } },
     });
@@ -124,7 +116,6 @@ describe('VerifyToken Component', () => {
       expect(container.querySelector('.chakra-spinner')).toBeNull()
     );
     expect(screen.getByText(errorMessage)).toBeInTheDocument();
-    // Simulate clicking Resend Email with a response status that indicates already verified.
     (resendVerification as jest.Mock).mockResolvedValueOnce({ status: 400 });
     fireEvent.click(screen.getByText(/resend email/i));
     await waitFor(() => {

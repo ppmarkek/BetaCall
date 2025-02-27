@@ -2,11 +2,10 @@ import { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { middleware } from '@/middleware';
 
-// We can spy on these static methods on NextResponse
+
 const mockRedirect = jest.spyOn(NextResponse, 'redirect');
 const mockNext = jest.spyOn(NextResponse, 'next');
 
-// A helper to build a mock NextRequest
 function createMockRequest({
   url = 'http://localhost:3000/',
   path = '/',
@@ -18,13 +17,9 @@ function createMockRequest({
   searchParams?: string;
   cookies?: Record<string, string>;
 }): NextRequest {
-  // nextUrl is read-only, so we’ll create a fake object with the properties needed.
-  // In real usage, `nextUrl` is an instance of `URL`. We'll mock it similarly:
   const mockedUrl = new URL(url + path + searchParams);
 
   return {
-    // You can mock out whatever properties your code uses.
-    // In this case, we rely on `nextUrl`, `cookies`, etc.
     nextUrl: mockedUrl,
     cookies: {
       get: (key: string) => {
@@ -32,15 +27,13 @@ function createMockRequest({
         return value ? { value } : undefined;
       },
     },
-    // The `req.url` property in the middleware is typically `req.url`,
-    // so let's just align them for consistency:
     url: url + path + searchParams,
   } as unknown as NextRequest;
 }
 
 describe('middleware', () => {
   beforeEach(() => {
-    jest.clearAllMocks(); // reset between tests
+    jest.clearAllMocks();
   });
 
   it('should remove search params if on "/signUp" but no "socialMedia" in query', () => {
@@ -51,11 +44,10 @@ describe('middleware', () => {
 
     middleware(request);
 
-    // We expect a redirect with the same path but no search params
     expect(mockRedirect).toHaveBeenCalledTimes(1);
 
     const redirectUrl = mockRedirect.mock.calls[0][0];
-    expect(redirectUrl.toString()).toBe('http://localhost:3000/signUp'); // no ?foo=bar
+    expect(redirectUrl.toString()).toBe('http://localhost:3000/signUp');
   });
 
   it('should allow "/signUp" if "socialMedia" is in the query', () => {
@@ -66,7 +58,6 @@ describe('middleware', () => {
 
     middleware(request);
 
-    // We expect NextResponse.next() in this scenario
     expect(mockNext).toHaveBeenCalledTimes(1);
     expect(mockRedirect).not.toHaveBeenCalled();
   });
@@ -107,7 +98,7 @@ describe('middleware', () => {
   it('should redirect to "/signIn" when user is NOT authenticated and route is private', () => {
     const request = createMockRequest({
       path: '/private-route',
-      cookies: {}, // no accessToken
+      cookies: {},
     });
 
     middleware(request);
