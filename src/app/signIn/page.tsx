@@ -46,10 +46,8 @@ export default function SignInPage() {
         document.cookie = `accessToken=${response.data.accessToken}; path=/; Secure; SameSite=Strict;`;
         document.cookie = `refreshToken=${response.data.refreshToken}; path=/; Secure; SameSite=Strict;`;
         router.push('/');
-        return;
       } else if (response.status === 403) {
         router.push(`/verify/${data.email}`);
-        return;
       } else if (response.status >= 400) {
         setErrorLogin(true);
       }
@@ -144,7 +142,7 @@ export default function SignInPage() {
         alignItems="center"
         justifyContent="center"
       >
-        <Spinner size="xl" />
+        <Spinner data-testid="spinner" size="xl" />
       </Flex>
     );
   }
@@ -202,7 +200,11 @@ export default function SignInPage() {
               </Flex>
               <StyledLink href="/recoverPassword">Recover password</StyledLink>
             </Flex>
-            <Button background="#6B59CC" type="submit">
+            <Button
+              data-testid="button-submit"
+              background="#6B59CC"
+              type="submit"
+            >
               Sign In
             </Button>
           </Flex>
