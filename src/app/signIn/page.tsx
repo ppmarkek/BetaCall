@@ -9,7 +9,7 @@ import { FaEye } from 'react-icons/fa6';
 import TextInput from '@/components/input/input';
 import Typography from '@/components/typography/typography';
 import Button from '@/components/button/button';
-import { userSignIn, userGoogleSignIn } from '../api/auth/route';
+import { userSignIn, userAppwriteSignIn } from '../api/auth/route';
 import { StyledCheckbox, StyledLink, Wrapper, BoxOr } from './style';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { account } from '@/lib/appwrite';
@@ -87,7 +87,7 @@ export default function SignInPage() {
       .get()
       .then(async (data) => {
         if (data) {
-          const response = await userGoogleSignIn({
+          const response = await userAppwriteSignIn({
             email: data.email,
             appwriteId: data.$id,
           });

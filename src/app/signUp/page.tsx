@@ -5,7 +5,7 @@ import { Wrapper } from './style';
 import { StepOne, StepTwo, StepThree } from './steps';
 import { useEffect, useState } from 'react';
 import { account } from '@/lib/appwrite';
-import { userGoogleSignIn } from '../api/auth/route';
+import { userAppwriteSignIn } from '../api/auth/route';
 import { useRouter } from 'next/navigation';
 import { useSearchParams } from 'next/navigation';
 
@@ -38,7 +38,7 @@ export default function SignUpPage() {
         const newUrl = `?${params.toString()}`;
         window.history.replaceState(null, '', newUrl);
         if (data) {
-          const response = await userGoogleSignIn({
+          const response = await userAppwriteSignIn({
             email: data.email,
             appwriteId: data.$id,
           });
