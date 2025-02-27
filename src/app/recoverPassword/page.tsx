@@ -5,7 +5,7 @@ import TextInput from '@/components/input/input';
 import Typography from '@/components/typography/typography';
 import { Flex, Image, Spinner } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
-import { MdEmail } from 'react-icons/md';;
+import { MdEmail } from 'react-icons/md';
 import { useState } from 'react';
 import { requestResetPassword } from '../api/userData/route';
 
@@ -46,7 +46,7 @@ export default function RecoverPasswordPage() {
         alignItems="center"
         justifyContent="center"
       >
-        <Spinner size="xl" />
+        <Spinner size="xl" data-testid="spinner" />
       </Flex>
     );
   }
@@ -59,6 +59,7 @@ export default function RecoverPasswordPage() {
       justifyContent="center"
       gap="50px"
       flexDirection={'column'}
+      data-testid={'recoverPasswordPage-testid'}
     >
       <Image src="/assets/recover.png" alt="recover image" />
       <Flex flexDirection={'column'} textAlign={'center'} gap={'10px'}>
