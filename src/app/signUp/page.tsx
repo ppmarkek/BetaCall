@@ -62,7 +62,6 @@ export default function SignUpPage() {
       .catch((error) => {
         if (error.message.includes('missing scope')) {
           setLoading(false);
-          return;
         } else {
           console.error('Error fetching google account data:', error);
         }

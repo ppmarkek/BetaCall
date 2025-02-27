@@ -8,7 +8,7 @@ import Typography from '@/components/typography/typography';
 import { StyledLink } from '../../style';
 import { resendVerification } from '@/app/api/auth/route';
 
-const VerifyEmail = () => {
+export default function VerifyToken() {
   const searchParams = useSearchParams();
   const email = searchParams.get('email');
   const { token } = useParams();
@@ -22,11 +22,9 @@ const VerifyEmail = () => {
       .get(`https://betacall-backend.onrender.com/api/users/verify/${token}`)
       .then((res) => {
         setMessage(res.data.message);
-        setLoading(false);
       })
       .catch((err) => {
         setMessage(err.response.data.message);
-        setLoading(false);
       })
       .finally(() => setLoading(false));
   }, [token]);
@@ -48,7 +46,7 @@ const VerifyEmail = () => {
     try {
       if (email) {
         const response = await resendVerification(email);
-        if (response.status === 400) {
+        if (response && response.status === 400) {
           setBeenVerified(true);
         }
       }
@@ -73,8 +71,9 @@ const VerifyEmail = () => {
             <Typography variant="H1">{message}</Typography>
           )}
         </Flex>
-        {message === 'Account verified successfully' ||
-          (beenVerified && <StyledLink href="/signIn">Sign In</StyledLink>)}
+        {(message === 'Account verified successfully' || beenVerified) && (
+          <StyledLink href="/signIn">Sign In</StyledLink>
+        )}
         {message === 'The link is invalid or expired' && !beenVerified && (
           <StyledLink onClick={() => handleResendVerification()}>
             Resend Email
@@ -86,6 +85,4 @@ const VerifyEmail = () => {
       </Flex>
     </Flex>
   );
-};
-
-export default VerifyEmail;
+}

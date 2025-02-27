@@ -7,7 +7,7 @@ import { StyledLink } from '../style';
 import { resendVerification } from '@/app/api/auth/route';
 import { useEffect, useState } from 'react';
 
-const VerifyEmail = () => {
+export default function VerifyEmail() {
   const { email } = useParams();
   const [loading, setLoading] = useState(true);
   const [beenVerified, setBeenVerified] = useState(false);
@@ -23,7 +23,7 @@ const VerifyEmail = () => {
         const response = await resendVerification(
           Array.isArray(emailToVerify) ? emailToVerify[0] : emailToVerify
         );
-        if (response.status === 400) {
+        if (response && response.status === 400) {
           setBeenVerified(true);
         }
       }
@@ -50,7 +50,7 @@ const VerifyEmail = () => {
         alignItems={'center'}
         justifyContent={'center'}
       >
-        <Spinner size="xl" />
+        <Spinner data-testid="spinner" size="xl" />
       </Flex>
     );
   }
@@ -89,6 +89,4 @@ const VerifyEmail = () => {
       </Flex>
     </Flex>
   );
-};
-
-export default VerifyEmail;
+}

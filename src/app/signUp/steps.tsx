@@ -48,24 +48,6 @@ interface StepThreeProps {
   email: string;
 }
 
-const encrypt = (str: string): string => {
-  try {
-    return btoa(str);
-  } catch (e) {
-    console.error('Encryption failed', e);
-    return str;
-  }
-};
-
-const decrypt = (str: string): string => {
-  try {
-    return atob(str);
-  } catch (e) {
-    console.error('Decryption failed', e);
-    return str;
-  }
-};
-
 export const StepOne = ({ nextStep, setLoading }: StepOneProps) => {
   const {
     register,
@@ -183,6 +165,24 @@ export const StepTwo = ({
   setEmail,
   setLoading,
 }: StepTwoProps) => {
+  const encrypt = (str: string): string => {
+    try {
+      return btoa(str);
+    } catch (e) {
+      console.error('Encryption failed', e);
+      return str;
+    }
+  };
+
+  const decrypt = (str: string): string => {
+    try {
+      return atob(str);
+    } catch (e) {
+      console.error('Decryption failed', e);
+      return str;
+    }
+  };
+
   const searchParams = useSearchParams();
 
   const defaultEmail = searchParams.get('email') ?? initialEmail ?? '';
@@ -255,7 +255,7 @@ export const StepTwo = ({
         firstName: data.firstName,
         lastName: data.lastName,
         password: data.password,
-        appwriteId,
+        appwriteId: appwriteId || '',
         terms: data.terms,
       });
 
@@ -363,6 +363,7 @@ export const StepTwo = ({
             error={!!errors.password}
             errorText={errors.password?.message}
             onIconClick={togglePasswordVisibility}
+            iconTestId="password-toggle-icon"
             {...register('password', {
               required: 'Password is required',
               validate: validatePassword,
@@ -377,6 +378,7 @@ export const StepTwo = ({
             error={!!errors.confirmPassword}
             errorText={errors.confirmPassword?.message}
             onIconClick={toggleConfirmPasswordVisibility}
+            iconTestId="confirm-password-toggle-icon"
             {...register('confirmPassword', {
               required: 'Please confirm your password',
               validate: (value) =>
@@ -399,7 +401,11 @@ export const StepTwo = ({
             </Typography>
           </Flex>
 
-          <Button background="#6B59CC" type="submit">
+          <Button
+            data-testid="submit-data-testid"
+            background="#6B59CC"
+            type="submit"
+          >
             Continue
           </Button>
         </Flex>
