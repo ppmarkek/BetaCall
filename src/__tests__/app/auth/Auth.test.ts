@@ -176,8 +176,6 @@ describe('Auth API', () => {
   // ---------------------------
   describe('userSignUp - Successful responses', () => {
     it('should return data on successful sign up', async () => {
-      const randomEmail = `test+${Math.random().toString(36).substring(2, 10)}@example.com`;
-
       const mockResponse: AxiosResponse = {
         data: {
           message: 'User created, verify email sent.',
@@ -192,7 +190,7 @@ describe('Auth API', () => {
       const response = await userSignUp({
         firstName: 'Test',
         lastName: 'Test',
-        email: randomEmail,
+        email: 'test@example.com',
         password: '{S[6O$}V56v^',
         terms: true,
       });
