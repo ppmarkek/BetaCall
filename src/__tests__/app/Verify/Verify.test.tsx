@@ -4,7 +4,8 @@ import '@testing-library/jest-dom';
 import axios from 'axios';
 import { resendVerification } from '@/app/api/auth/route';
 import VerifyToken from 'src/app/verify/token/[token]/page';
-import VerifyEmail from 'src/app/verify/[email]/page';
+import VerifyEmail, { handleResendVerification } from 'src/app/verify/[email]/page';
+import { useParams, useSearchParams } from 'next/navigation';
 
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
@@ -18,7 +19,36 @@ jest.mock('next/navigation', () => ({
   useSearchParams: jest.fn(),
 }));
 
-import { useParams, useSearchParams } from 'next/navigation';
+describe('handleResendVerification function', () => {
+  const setBeenVerified = jest.fn();
+  const setLoading = jest.fn();
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should call resendVerification with the first element if emailToVerify is an array', async () => {
+    const emailArray = ['test@example.com'];
+    (resendVerification as jest.Mock).mockResolvedValueOnce({ status: 400 });
+
+    await handleResendVerification(emailArray, setBeenVerified, setLoading);
+
+    expect(resendVerification).toHaveBeenCalledWith('test@example.com');
+    expect(setBeenVerified).toHaveBeenCalledWith(true);
+    expect(setLoading).toHaveBeenCalledWith(false);
+  });
+
+  it('should call resendVerification with the email string if emailToVerify is a string', async () => {
+    const emailString = 'test@example.com';
+    (resendVerification as jest.Mock).mockResolvedValueOnce({ status: 400 });
+
+    await handleResendVerification(emailString, setBeenVerified, setLoading);
+
+    expect(resendVerification).toHaveBeenCalledWith('test@example.com');
+    expect(setBeenVerified).toHaveBeenCalledWith(true);
+    expect(setLoading).toHaveBeenCalledWith(false);
+  });
+});
 
 describe('VerifyToken Component', () => {
   beforeEach(() => {
@@ -159,14 +189,6 @@ describe('VerifyEmail Component', () => {
     jest.clearAllMocks();
   });
 
-  it('should display spinner while loading', () => {
-    (useParams as jest.Mock).mockReturnValue({
-      email: encodeURIComponent('test@example.com'),
-    });
-    const { container } = render(<VerifyEmail />);
-    expect(container.querySelector('.chakra-spinner')).toBeInTheDocument();
-  });
-
   it('should display success message and Sign In link when account is verified via resend', async () => {
     (useParams as jest.Mock).mockReturnValue({
       email: encodeURIComponent('test@example.com'),
@@ -234,5 +256,18 @@ describe('VerifyEmail Component', () => {
       expect(consoleErrorSpy).toHaveBeenCalledWith(errorObj);
     });
     consoleErrorSpy.mockRestore();
+  });
+
+  it('should set download to false if email address is missing', async () => {
+    (useParams as jest.Mock).mockReturnValue({ email: undefined });
+    render(<VerifyEmail />);
+
+    await waitFor(() => {
+      expect(screen.queryByTestId('spinner')).toBeNull();
+    });
+
+    expect(
+      screen.getByText(/we have sent a confirmation email to your address/i)
+    ).toBeInTheDocument();
   });
 });

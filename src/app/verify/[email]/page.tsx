@@ -7,6 +7,27 @@ import { StyledLink } from '../style';
 import { resendVerification } from '@/app/api/auth/route';
 import { useEffect, useState } from 'react';
 
+export async function handleResendVerification(
+  emailToVerify: string | string[],
+  setBeenVerified: (verified: boolean) => void,
+  setLoading: (loading: boolean) => void
+): Promise<void> {
+  try {
+    if (emailToVerify) {
+      const response = await resendVerification(
+        Array.isArray(emailToVerify) ? emailToVerify[0] : emailToVerify
+      );
+      if (response && response.status === 400) {
+        setBeenVerified(true);
+      }
+    }
+  } catch (err) {
+    console.error(err);
+  } finally {
+    setLoading(false);
+  }
+}
+
 export default function VerifyEmail() {
   const { email } = useParams();
   const [loading, setLoading] = useState(true);
@@ -15,28 +36,9 @@ export default function VerifyEmail() {
   const decodedEmail =
     typeof email === 'string' ? decodeURIComponent(email) : '';
 
-  const handleResendVerification = async (
-    emailToVerify: string | string[]
-  ): Promise<void> => {
-    try {
-      if (emailToVerify) {
-        const response = await resendVerification(
-          Array.isArray(emailToVerify) ? emailToVerify[0] : emailToVerify
-        );
-        if (response && response.status === 400) {
-          setBeenVerified(true);
-        }
-      }
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
     if (decodedEmail) {
-      handleResendVerification(decodedEmail);
+      handleResendVerification(decodedEmail, setBeenVerified, setLoading);
     } else {
       setLoading(false);
     }
@@ -82,7 +84,15 @@ export default function VerifyEmail() {
         {beenVerified ? (
           <StyledLink href="/signIn">Sign In</StyledLink>
         ) : (
-          <StyledLink onClick={() => handleResendVerification(decodedEmail)}>
+          <StyledLink
+            onClick={() =>
+              handleResendVerification(
+                decodedEmail,
+                setBeenVerified,
+                setLoading
+              )
+            }
+          >
             Resend Email
           </StyledLink>
         )}
