@@ -1,4 +1,5 @@
 import '@testing-library/jest-dom';
+import 'isomorphic-fetch';
 import { createSerializer } from '@emotion/jest';
 expect.addSnapshotSerializer(createSerializer());
 

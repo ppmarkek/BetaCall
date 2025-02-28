@@ -1,13 +1,13 @@
+import 'isomorphic-fetch';
 import { NextRequest } from 'next/server';
-import { NextResponse } from 'next/server';
 import { middleware } from '@/middleware';
 
-
-const mockRedirect = jest.spyOn(NextResponse, 'redirect');
-const mockNext = jest.spyOn(NextResponse, 'next');
+interface NextUrl extends URL {
+  clone: () => URL;
+}
 
 function createMockRequest({
-  url = 'http://localhost:3000/',
+  url = 'http://localhost:3000',
   path = '/',
   searchParams = '',
   cookies = {},
@@ -17,7 +17,12 @@ function createMockRequest({
   searchParams?: string;
   cookies?: Record<string, string>;
 }): NextRequest {
-  const mockedUrl = new URL(url + path + searchParams);
+  const fullUrl = new URL(url);
+  fullUrl.pathname = path;
+  fullUrl.search = searchParams;
+
+  const mockedUrl = fullUrl as NextUrl;
+  mockedUrl.clone = () => new URL(mockedUrl.toString());
 
   return {
     nextUrl: mockedUrl,
@@ -27,27 +32,21 @@ function createMockRequest({
         return value ? { value } : undefined;
       },
     },
-    url: url + path + searchParams,
+    url: mockedUrl.toString(),
   } as unknown as NextRequest;
 }
 
 describe('middleware', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should remove search params if on "/signUp" but no "socialMedia" in query', () => {
     const request = createMockRequest({
       path: '/signUp',
       searchParams: '?foo=bar',
     });
 
-    middleware(request);
-
-    expect(mockRedirect).toHaveBeenCalledTimes(1);
-
-    const redirectUrl = mockRedirect.mock.calls[0][0];
-    expect(redirectUrl.toString()).toBe('http://localhost:3000/signUp');
+    const response = middleware(request);
+    expect(response.headers.get('location')).toBe(
+      'http://localhost:3000/signUp'
+    );
   });
 
   it('should allow "/signUp" if "socialMedia" is in the query', () => {
@@ -56,10 +55,8 @@ describe('middleware', () => {
       searchParams: '?socialMedia=google',
     });
 
-    middleware(request);
-
-    expect(mockNext).toHaveBeenCalledTimes(1);
-    expect(mockRedirect).not.toHaveBeenCalled();
+    const response = middleware(request);
+    expect(response.headers.get('location')).toBeNull();
   });
 
   it('should just call NextResponse.next() for static file paths (like /logo.png)', () => {
@@ -67,10 +64,8 @@ describe('middleware', () => {
       path: '/images/logo.png',
     });
 
-    middleware(request);
-
-    expect(mockNext).toHaveBeenCalledTimes(1);
-    expect(mockRedirect).not.toHaveBeenCalled();
+    const response = middleware(request);
+    expect(response.headers.get('location')).toBeNull();
   });
 
   it('should allow routes that start with "/verify/" to proceed', () => {
@@ -78,10 +73,8 @@ describe('middleware', () => {
       path: '/verify/1234',
     });
 
-    middleware(request);
-
-    expect(mockNext).toHaveBeenCalledTimes(1);
-    expect(mockRedirect).not.toHaveBeenCalled();
+    const response = middleware(request);
+    expect(response.headers.get('location')).toBeNull();
   });
 
   it('should allow routes that start with "/resetPassword/" to proceed', () => {
@@ -89,10 +82,8 @@ describe('middleware', () => {
       path: '/resetPassword/abcdef',
     });
 
-    middleware(request);
-
-    expect(mockNext).toHaveBeenCalledTimes(1);
-    expect(mockRedirect).not.toHaveBeenCalled();
+    const response = middleware(request);
+    expect(response.headers.get('location')).toBeNull();
   });
 
   it('should redirect to "/signIn" when user is NOT authenticated and route is private', () => {
@@ -101,11 +92,10 @@ describe('middleware', () => {
       cookies: {},
     });
 
-    middleware(request);
-
-    expect(mockRedirect).toHaveBeenCalledTimes(1);
-    const redirectUrl = mockRedirect.mock.calls[0][0];
-    expect(redirectUrl.toString()).toBe('http://localhost:3000/signIn');
+    const response = middleware(request);
+    expect(response.headers.get('location')).toBe(
+      'http://localhost:3000/signIn'
+    );
   });
 
   it('should redirect to "/" when user IS authenticated and route is public ("/signUp")', () => {
@@ -114,11 +104,8 @@ describe('middleware', () => {
       cookies: { accessToken: 'myMockToken' },
     });
 
-    middleware(request);
-
-    expect(mockRedirect).toHaveBeenCalledTimes(1);
-    const redirectUrl = mockRedirect.mock.calls[0][0];
-    expect(redirectUrl.toString()).toBe('http://localhost:3000/');
+    const response = middleware(request);
+    expect(response.headers.get('location')).toBe('http://localhost:3000/');
   });
 
   it('should call NextResponse.next() when user is authenticated and route is private', () => {
@@ -127,9 +114,7 @@ describe('middleware', () => {
       cookies: { accessToken: 'myMockToken' },
     });
 
-    middleware(request);
-
-    expect(mockNext).toHaveBeenCalledTimes(1);
-    expect(mockRedirect).not.toHaveBeenCalled();
+    const response = middleware(request);
+    expect(response.headers.get('location')).toBeNull();
   });
 });
