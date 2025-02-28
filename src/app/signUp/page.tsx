@@ -110,8 +110,13 @@ export default function SignUpPage() {
       justifyContent={'center'}
     >
       <Wrapper>
-        <StepsRoot step={step} onStepChange={(e) => setStep(e.step)} count={3}>
-          <StepsContent index={0}>
+        <StepsRoot
+          data-testid="steps-root"
+          step={step}
+          onStepChange={(e) => setStep(e.step)}
+          count={3}
+        >
+          <StepsContent index={0} data-testid="steps-content-0">
             <StepOne
               nextStep={(data: FormDataStepOne) => {
                 setEmail(data.email);
@@ -122,7 +127,7 @@ export default function SignUpPage() {
             />
           </StepsContent>
 
-          <StepsContent index={1}>
+          <StepsContent index={1} data-testid="steps-content-1">
             <StepTwo
               setLoading={setLoading}
               nextStep={() => setStep(2)}
@@ -134,7 +139,7 @@ export default function SignUpPage() {
               terms={terms}
             />
           </StepsContent>
-          <StepsContent index={2}>
+          <StepsContent index={2} data-testid="steps-content-2">
             <StepThree email={email} />
           </StepsContent>
         </StepsRoot>

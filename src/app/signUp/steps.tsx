@@ -13,6 +13,7 @@ import { OAuthProvider } from 'appwrite';
 import { account } from '@/lib/appwrite';
 import { useSearchParams } from 'next/navigation';
 import { validatePassword } from '@/validation/validation';
+import { decrypt, encrypt } from '@/modules/encryptionModule';
 
 interface FormDataStepOne {
   email: string;
@@ -165,26 +166,7 @@ export const StepTwo = ({
   setEmail,
   setLoading,
 }: StepTwoProps) => {
-  const encrypt = (str: string): string => {
-    try {
-      return btoa(str);
-    } catch (e) {
-      console.error('Encryption failed', e);
-      return str;
-    }
-  };
-
-  const decrypt = (str: string): string => {
-    try {
-      return atob(str);
-    } catch (e) {
-      console.error('Decryption failed', e);
-      return str;
-    }
-  };
-
   const searchParams = useSearchParams();
-
   const defaultEmail = searchParams.get('email') ?? initialEmail ?? '';
   const defaultFirstName =
     searchParams.get('firstName') ?? initialFirstName ?? '';
