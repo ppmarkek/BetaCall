@@ -4,6 +4,8 @@ import '@testing-library/jest-dom';
 import ResetPasswordPage from '@/app/resetPassword/[token]/page';
 import { tokenResetPassword } from '@/app/api/userData/route';
 import { AxiosResponse, AxiosHeaders } from 'axios';
+import userEvent from '@testing-library/user-event';
+
 import * as nextNavigation from 'next/navigation';
 
 jest.mock('@/app/api/userData/route');
@@ -193,5 +195,73 @@ describe('Reset Password Page', () => {
     });
     const { container } = render(<ResetPasswordPage />);
     expect(container).toMatchSnapshot();
+  });
+});
+
+describe('Reset Password Page - Password Validation', () => {
+  beforeEach(() => {
+    jest
+      .spyOn(nextNavigation, 'useParams')
+      .mockReturnValue({ token: 'test-token' });
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  it('displays "Passwords do not match" error when passwords do not match', async () => {
+    render(<ResetPasswordPage />);
+
+    const newPasswordInput = screen.getByPlaceholderText(
+      'Enter your new password'
+    );
+    const confirmPasswordInput = screen.getByPlaceholderText(
+      'Confirm your new password'
+    );
+
+    // Type different values into the fields
+    await userEvent.type(newPasswordInput, 'ValidPassword123!');
+    await userEvent.type(confirmPasswordInput, 'DifferentPassword');
+
+    // Click the submit button to trigger validation
+    const submitButton = screen.getByTestId('button-submit');
+    await userEvent.click(submitButton);
+
+    // Hover over the confirm password input to trigger the tooltip display
+    await userEvent.hover(confirmPasswordInput);
+
+    // Wait for the tooltip error message to appear
+    await waitFor(() => {
+      expect(screen.getByText(/Passwords do not match/i)).toBeInTheDocument();
+    });
+  });
+
+  it('does not display error when passwords match', async () => {
+    render(<ResetPasswordPage />);
+
+    const newPasswordInput = screen.getByPlaceholderText(
+      'Enter your new password'
+    );
+    const confirmPasswordInput = screen.getByPlaceholderText(
+      'Confirm your new password'
+    );
+
+    // Type matching values into the fields
+    await userEvent.type(newPasswordInput, 'ValidPassword123!');
+    await userEvent.type(confirmPasswordInput, 'ValidPassword123!');
+
+    // Click the submit button
+    const submitButton = screen.getByTestId('button-submit');
+    await userEvent.click(submitButton);
+
+    // Hover over the confirm password input
+    await userEvent.hover(confirmPasswordInput);
+
+    // Wait to ensure the error tooltip is not shown
+    await waitFor(() => {
+      expect(
+        screen.queryByText(/Passwords do not match/i)
+      ).not.toBeInTheDocument();
+    });
   });
 });

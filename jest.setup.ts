@@ -1,6 +1,9 @@
 import '@testing-library/jest-dom';
 import 'isomorphic-fetch';
 import { createSerializer } from '@emotion/jest';
+import ResizeObserver from 'resize-observer-polyfill';
+
+global.ResizeObserver = ResizeObserver;
 expect.addSnapshotSerializer(createSerializer());
 
 jest.spyOn(console, 'error').mockImplementation((...args) => {
@@ -11,3 +14,9 @@ jest.spyOn(console, 'error').mockImplementation((...args) => {
     return;
   }
 });
+
+global.ResizeObserver = class ResizeObserver {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+};
