@@ -6,8 +6,8 @@ import { StepOne, StepTwo, StepThree } from './steps';
 import { useEffect, useState } from 'react';
 import { account } from '@/lib/appwrite';
 import { userAppwriteSignIn } from '../api/auth/route';
-import { useRouter } from 'next/navigation';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { getSignUpCallbacks } from './signUpCallbacks';
 
 type FormDataStepOne = {
   email: string;
@@ -25,6 +25,17 @@ export default function SignUpPage() {
   const [terms, setTerms] = useState(false);
   const [loading, setLoading] = useState(Boolean(search));
   const router = useRouter();
+
+  const handleStepOneNext = (data: FormDataStepOne) => {
+    setEmail(data.email);
+    setTerms(data.terms);
+    setStep(1);
+  };
+
+  const { handleStepTwoNext, handleSetEmail } = getSignUpCallbacks(
+    setStep,
+    setEmail
+  );
 
   useEffect(() => {
     if (!search) return;
@@ -71,7 +82,7 @@ export default function SignUpPage() {
           setLoading(false);
         }
       });
-  }, [email, router, search, searchParams]);
+  }, [search, searchParams, router]);
 
   useEffect(() => {
     const handleBeforeUnload = () => {
@@ -117,21 +128,14 @@ export default function SignUpPage() {
           count={3}
         >
           <StepsContent index={0} data-testid="steps-content-0">
-            <StepOne
-              nextStep={(data: FormDataStepOne) => {
-                setEmail(data.email);
-                setTerms(data.terms);
-                setStep(1);
-              }}
-              setLoading={setLoading}
-            />
+            <StepOne nextStep={handleStepOneNext} setLoading={setLoading} />
           </StepsContent>
 
           <StepsContent index={1} data-testid="steps-content-1">
             <StepTwo
               setLoading={setLoading}
-              nextStep={() => setStep(2)}
-              setEmail={(email) => setEmail(email)}
+              nextStep={handleStepTwoNext}
+              setEmail={handleSetEmail}
               email={email}
               appwriteId={appwriteId}
               firstName={firstName}

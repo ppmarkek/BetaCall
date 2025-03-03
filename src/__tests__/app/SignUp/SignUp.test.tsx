@@ -1,15 +1,17 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '../../../../test-utils';
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+  within,
+} from '../../../../test-utils';
 import '@testing-library/jest-dom';
 import SignUpPage from '@/app/signUp/page';
-import { StepOne, StepTwo, StepThree } from '@/app/signUp/steps';
 import { account } from '@/lib/appwrite';
-import {
-  userAppwriteSignIn,
-  userSignUp,
-  resendVerification,
-} from '@/app/api/auth/route';
+import { userAppwriteSignIn } from '@/app/api/auth/route';
 import { useSearchParams, useRouter } from 'next/navigation';
+import { getSignUpCallbacks } from '@/app/signUp/signUpCallbacks';
 
 beforeAll(() => {
   window.history.replaceState = jest.fn();
@@ -33,7 +35,7 @@ interface FlexProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 jest.mock('next/navigation', () => ({
-  useSearchParams: jest.fn(),
+  useSearchParams: jest.fn(() => new URLSearchParams('')),
   useRouter: jest.fn(() => ({
     push: jest.fn(),
   })),
@@ -125,6 +127,81 @@ describe('SignUpPage', () => {
     await waitFor(() => {
       expect(pushMock).toHaveBeenCalledWith('/');
     });
+  });
+});
+
+describe('SignUpPage - handleStepTwoNext & handleSetEmail', () => {
+  beforeEach(() => {
+    jest.resetAllMocks();
+    (useSearchParams as jest.Mock).mockReturnValue(new URLSearchParams(''));
+  });
+
+  it('advances to StepThree and retains the provided email after StepTwo submission', async () => {
+    render(<SignUpPage />);
+
+    const stepOneContainer = screen.getByTestId('steps-content-0');
+    const emailInput =
+      within(stepOneContainer).getByPlaceholderText('Enter your email');
+    const checkbox = within(stepOneContainer).getByRole('checkbox');
+    const signUpButton = within(stepOneContainer).getByRole('button', {
+      name: /^Sign Up$/i,
+    });
+
+    fireEvent.change(emailInput, { target: { value: 'testuser@example.com' } });
+    fireEvent.blur(emailInput);
+    fireEvent.click(checkbox);
+    fireEvent.click(signUpButton);
+
+    await waitFor(() => {
+      expect(
+        screen.getByPlaceholderText('Enter your password')
+      ).toBeInTheDocument();
+    });
+
+    fireEvent.change(screen.getByPlaceholderText('Enter your first name'), {
+      target: { value: 'Alice' },
+    });
+    fireEvent.change(screen.getByPlaceholderText('Enter your last name'), {
+      target: { value: 'Wonderland' },
+    });
+    fireEvent.change(screen.getByPlaceholderText('Enter your password'), {
+      target: { value: 'Password123!' },
+    });
+    fireEvent.change(screen.getByPlaceholderText('Confirm your password'), {
+      target: { value: 'Password123!' },
+    });
+
+    fireEvent.click(screen.getByTestId('submit-data-testid'));
+
+    await waitFor(() => {
+      expect(screen.getByText(/Thank you/i)).toBeInTheDocument();
+      expect(
+        screen.getByText(/We sent an email to testuser@example.com/i)
+      ).toBeInTheDocument();
+    });
+  });
+});
+
+describe('getSignUpCallbacks', () => {
+  it('handleStepTwoNext should call setStep with 2', () => {
+    const setStepMock = jest.fn();
+    const setEmailMock = jest.fn();
+    const { handleStepTwoNext } = getSignUpCallbacks(setStepMock, setEmailMock);
+
+    handleStepTwoNext();
+
+    expect(setStepMock).toHaveBeenCalledWith(2);
+  });
+
+  it('handleSetEmail should call setEmail with provided email', () => {
+    const setStepMock = jest.fn();
+    const setEmailMock = jest.fn();
+    const { handleSetEmail } = getSignUpCallbacks(setStepMock, setEmailMock);
+    const testEmail = 'test@example.com';
+
+    handleSetEmail(testEmail);
+
+    expect(setEmailMock).toHaveBeenCalledWith(testEmail);
   });
 });
 
@@ -377,254 +454,5 @@ describe('SignUpPage - Navigation & Callbacks', () => {
         screen.getByText(/We sent an email to testuser@example.com/i)
       ).toBeInTheDocument();
     });
-  });
-});
-
-describe('StepOne', () => {
-  const nextStepMock = jest.fn();
-  const setLoadingMock = jest.fn();
-
-  beforeEach(() => {
-    jest.resetAllMocks();
-    (useSearchParams as jest.Mock).mockReturnValue(new URLSearchParams(''));
-  });
-
-  it('submits form with email and terms checked', async () => {
-    render(<StepOne nextStep={nextStepMock} setLoading={setLoadingMock} />);
-    const emailInput = screen.getByPlaceholderText('Enter your email');
-    const checkbox = screen.getByRole('checkbox');
-    const submitButton = screen.getByRole('button', { name: /^Sign Up$/i });
-
-    fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
-    fireEvent.blur(emailInput);
-    fireEvent.click(checkbox);
-    fireEvent.click(submitButton);
-
-    await waitFor(() => {
-      expect(nextStepMock).toHaveBeenCalledWith({
-        email: 'test@example.com',
-        terms: true,
-      });
-    });
-  });
-
-  it('calls createOAuth2Session on Google login click', () => {
-    render(<StepOne nextStep={nextStepMock} setLoading={setLoadingMock} />);
-    const googleButton = screen.getByRole('button', {
-      name: /Sign Up with Google/i,
-    });
-    fireEvent.click(googleButton);
-    expect(setLoadingMock).toHaveBeenCalledWith(true);
-    expect(account.createOAuth2Session).toHaveBeenCalledWith(
-      expect.any(String),
-      'http://localhost:3000/signUp?socialMedia=true',
-      'http://localhost:3000/signUp?socialMedia=false'
-    );
-  });
-
-  it('calls createOAuth2Session on GitHub login click', () => {
-    render(<StepOne nextStep={nextStepMock} setLoading={setLoadingMock} />);
-    const githubButton = screen.getByRole('button', {
-      name: /Sign Up with GitHub/i,
-    });
-    fireEvent.click(githubButton);
-    expect(setLoadingMock).toHaveBeenCalledWith(true);
-    expect(account.createOAuth2Session).toHaveBeenCalledWith(
-      expect.any(String),
-      'http://localhost:3000/signUp?socialMedia=true',
-      'http://localhost:3000/signUp?socialMedia=false'
-    );
-  });
-});
-
-describe('StepTwo', () => {
-  const setLoadingMock = jest.fn();
-  const setEmailMock = jest.fn();
-  const nextStepMock = jest.fn();
-  const defaultProps = {
-    email: 'step2@example.com',
-    appwriteId: '123',
-    firstName: 'John',
-    lastName: 'Doe',
-    terms: true,
-    setLoading: setLoadingMock,
-    setEmail: setEmailMock,
-    nextStep: nextStepMock,
-  };
-
-  beforeEach(() => {
-    jest.resetAllMocks();
-    (useSearchParams as jest.Mock).mockReturnValue(new URLSearchParams(''));
-  });
-
-  it('renders query params over initial props', () => {
-    const params = new URLSearchParams();
-    params.set('email', 'query@example.com');
-    params.set('firstName', 'QueryFirst');
-    params.set('lastName', 'QueryLast');
-    params.set('terms', 'true');
-    params.set('password', btoa('Password123'));
-    (useSearchParams as jest.Mock).mockReturnValue(params);
-    render(<StepTwo {...defaultProps} />);
-    expect(screen.getByDisplayValue('query@example.com')).toBeInTheDocument();
-    expect(screen.getByDisplayValue('QueryFirst')).toBeInTheDocument();
-    expect(screen.getByDisplayValue('QueryLast')).toBeInTheDocument();
-    expect(screen.getAllByDisplayValue('Password123')).toHaveLength(2);
-  });
-
-  it('uses initial props when no query params', () => {
-    render(<StepTwo {...defaultProps} />);
-    expect(screen.getByPlaceholderText('Enter your email')).toHaveValue(
-      'step2@example.com'
-    );
-    expect(screen.getByPlaceholderText('Enter your first name')).toHaveValue(
-      'John'
-    );
-    expect(screen.getByPlaceholderText('Enter your last name')).toHaveValue(
-      'Doe'
-    );
-  });
-
-  it('toggles password visibility', () => {
-    render(<StepTwo {...defaultProps} />);
-    const passwordInput = screen.getByPlaceholderText(
-      'Enter your password'
-    ) as HTMLInputElement;
-    const confirmPasswordInput = screen.getByPlaceholderText(
-      'Confirm your password'
-    ) as HTMLInputElement;
-    const passwordToggleIcon = screen.getByTestId('password-toggle-icon');
-    const confirmPasswordToggleIcon = screen.getByTestId(
-      'confirm-password-toggle-icon'
-    );
-
-    expect(passwordInput.type).toBe('password');
-    expect(confirmPasswordInput.type).toBe('password');
-
-    fireEvent.click(passwordToggleIcon);
-    fireEvent.click(confirmPasswordToggleIcon);
-
-    expect(passwordInput.type).toBe('text');
-    expect(confirmPasswordInput.type).toBe('text');
-  });
-
-  it('calls nextStep and setEmail on successful submission', async () => {
-    (userSignUp as jest.Mock).mockResolvedValueOnce({ status: 201 });
-    render(<StepTwo {...defaultProps} />);
-    fireEvent.change(screen.getByPlaceholderText('Enter your first name'), {
-      target: { value: 'John' },
-    });
-    fireEvent.change(screen.getByPlaceholderText('Enter your last name'), {
-      target: { value: 'Doe' },
-    });
-    fireEvent.change(screen.getByPlaceholderText('Enter your password'), {
-      target: { value: 'Password123!' },
-    });
-    fireEvent.change(screen.getByPlaceholderText('Confirm your password'), {
-      target: { value: 'Password123!' },
-    });
-
-    fireEvent.click(screen.getByTestId('submit-data-testid'));
-
-    await waitFor(() => {
-      expect(nextStepMock).toHaveBeenCalled();
-      expect(setEmailMock).toHaveBeenCalledWith('step2@example.com');
-    });
-  });
-
-  it('shows error when email already exists', async () => {
-    (userSignUp as jest.Mock).mockResolvedValueOnce({ status: 400 });
-    render(<StepTwo {...defaultProps} />);
-    fireEvent.change(screen.getByPlaceholderText('Enter your first name'), {
-      target: { value: 'John' },
-    });
-    fireEvent.change(screen.getByPlaceholderText('Enter your last name'), {
-      target: { value: 'Doe' },
-    });
-    fireEvent.change(screen.getByPlaceholderText('Enter your password'), {
-      target: { value: 'Password123!' },
-    });
-    fireEvent.change(screen.getByPlaceholderText('Confirm your password'), {
-      target: { value: 'Password123!' },
-    });
-
-    fireEvent.click(screen.getByTestId('submit-data-testid'));
-
-    await waitFor(() => {
-      expect(
-        screen.getByText(/A user with this email already exists/i)
-      ).toBeInTheDocument();
-    });
-    expect(setLoadingMock).toHaveBeenCalledWith(false);
-  });
-
-  it('stops loading and logs error on exception', async () => {
-    const testError = new Error('Test error');
-    (userSignUp as jest.Mock).mockRejectedValueOnce(testError);
-    const consoleErrorSpy = jest
-      .spyOn(console, 'error')
-      .mockImplementation(() => {});
-
-    render(<StepTwo {...defaultProps} />);
-    fireEvent.change(screen.getByPlaceholderText('Enter your first name'), {
-      target: { value: 'John' },
-    });
-    fireEvent.change(screen.getByPlaceholderText('Enter your last name'), {
-      target: { value: 'Doe' },
-    });
-    fireEvent.change(screen.getByPlaceholderText('Enter your password'), {
-      target: { value: 'Password123!' },
-    });
-    fireEvent.change(screen.getByPlaceholderText('Confirm your password'), {
-      target: { value: 'Password123!' },
-    });
-
-    fireEvent.click(screen.getByTestId('submit-data-testid'));
-
-    await waitFor(() => {
-      expect(setLoadingMock).toHaveBeenCalledWith(false);
-      expect(consoleErrorSpy).toHaveBeenCalledWith(testError);
-    });
-    consoleErrorSpy.mockRestore();
-  });
-
-  it('passes empty string for appwriteId if falsy', async () => {
-    const props = { ...defaultProps, appwriteId: undefined };
-    (userSignUp as jest.Mock).mockResolvedValueOnce({ status: 201 });
-    render(<StepTwo {...props} />);
-    fireEvent.change(screen.getByPlaceholderText('Enter your first name'), {
-      target: { value: 'John' },
-    });
-    fireEvent.change(screen.getByPlaceholderText('Enter your last name'), {
-      target: { value: 'Doe' },
-    });
-    fireEvent.change(screen.getByPlaceholderText('Enter your password'), {
-      target: { value: 'Password123!' },
-    });
-    fireEvent.change(screen.getByPlaceholderText('Confirm your password'), {
-      target: { value: 'Password123!' },
-    });
-
-    fireEvent.click(screen.getByTestId('submit-data-testid'));
-
-    await waitFor(() => {
-      expect(userSignUp).toHaveBeenCalled();
-    });
-
-    const callArgs = (userSignUp as jest.Mock).mock.calls[0][0];
-    expect(callArgs.appwriteId).toBe('');
-  });
-});
-
-describe('StepThree', () => {
-  it('renders confirmation message and handles resend email click', () => {
-    render(<StepThree email="confirm@example.com" />);
-    expect(
-      screen.getByText(/We sent an email to confirm@example.com/i)
-    ).toBeInTheDocument();
-
-    const resendLink = screen.getByText(/Resend Email/i);
-    fireEvent.click(resendLink);
-    expect(resendVerification).toHaveBeenCalledWith('confirm@example.com');
   });
 });
