@@ -25,7 +25,7 @@ export const StyledInput = styled(Input, {
   shouldForwardProp: (prop) => prop !== '$icon',
 })<{
   $icon?: boolean;
-  color: string;
+  color?: string;
 }>`
   padding: 20px 0px;
   padding-left: 0px;

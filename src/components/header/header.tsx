@@ -21,12 +21,12 @@ function Header() {
   }, []);
 
   return (
-    <>
+    <header data-testid="header-testid">
       {!isAuthenticated ? (
         <Box borderBottom={'1px solid #EEEEEE'}>
           <Flex
             padding={'0px 270px'}
-            h={'80px'}
+            height={'80px'}
             alignItems={'center'}
             justifyContent={'space-between'}
           >
@@ -57,14 +57,12 @@ function Header() {
           </Flex>
         </Box>
       ) : (
-        <header>
-          <Grid>
-            <GridItem></GridItem>
-            <GridItem></GridItem>
-          </Grid>
-        </header>
+        <Grid>
+          <GridItem></GridItem>
+          <GridItem></GridItem>
+        </Grid>
       )}
-    </>
+    </header>
   );
 }
 

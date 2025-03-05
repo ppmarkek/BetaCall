@@ -67,7 +67,7 @@ export default function ResetPasswordPage() {
         alignItems="center"
         justifyContent="center"
       >
-        <Spinner size="xl" />
+        <Spinner data-testid="spinner" size="xl" />
       </Flex>
     );
   }
@@ -78,6 +78,7 @@ export default function ResetPasswordPage() {
       minHeight="800px"
       alignItems="center"
       justifyContent="center"
+      data-testid="ResetPasswordPage-testid"
     >
       <Wrapper>
         {successfull ? (
@@ -111,7 +112,7 @@ export default function ResetPasswordPage() {
               )}
             </Flex>
             <form onSubmit={handleSubmit(onSubmit)}>
-              <Flex flexDirection="column" gap="35px">
+              <Flex flexDirection="column" gap="35px" width={'420px'}>
                 <TextInput
                   title="New Password"
                   iconElement={showNewPassword ? FaEye : MdLock}
@@ -141,7 +142,11 @@ export default function ResetPasswordPage() {
                   })}
                 />
 
-                <Button background="#6B59CC" type="submit">
+                <Button
+                  data-testid="button-submit"
+                  background="#6B59CC"
+                  type="submit"
+                >
                   Save
                 </Button>
               </Flex>

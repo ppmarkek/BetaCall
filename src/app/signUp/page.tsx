@@ -5,9 +5,9 @@ import { Wrapper } from './style';
 import { StepOne, StepTwo, StepThree } from './steps';
 import { useEffect, useState } from 'react';
 import { account } from '@/lib/appwrite';
-import { userGoogleSignIn } from '../api/auth/route';
-import { useRouter } from 'next/navigation';
-import { useSearchParams } from 'next/navigation';
+import { userAppwriteSignIn } from '../api/auth/route';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { getSignUpCallbacks } from './signUpCallbacks';
 
 type FormDataStepOne = {
   email: string;
@@ -26,6 +26,17 @@ export default function SignUpPage() {
   const [loading, setLoading] = useState(Boolean(search));
   const router = useRouter();
 
+  const handleStepOneNext = (data: FormDataStepOne) => {
+    setEmail(data.email);
+    setTerms(data.terms);
+    setStep(1);
+  };
+
+  const { handleStepTwoNext, handleSetEmail } = getSignUpCallbacks(
+    setStep,
+    setEmail
+  );
+
   useEffect(() => {
     if (!search) return;
 
@@ -38,7 +49,7 @@ export default function SignUpPage() {
         const newUrl = `?${params.toString()}`;
         window.history.replaceState(null, '', newUrl);
         if (data) {
-          const response = await userGoogleSignIn({
+          const response = await userAppwriteSignIn({
             email: data.email,
             appwriteId: data.$id,
           });
@@ -62,7 +73,6 @@ export default function SignUpPage() {
       .catch((error) => {
         if (error.message.includes('missing scope')) {
           setLoading(false);
-          return;
         } else {
           console.error('Error fetching google account data:', error);
         }
@@ -72,7 +82,7 @@ export default function SignUpPage() {
           setLoading(false);
         }
       });
-  }, [email, router, search, searchParams]);
+  }, [search, searchParams, router]);
 
   useEffect(() => {
     const handleBeforeUnload = () => {
@@ -111,23 +121,21 @@ export default function SignUpPage() {
       justifyContent={'center'}
     >
       <Wrapper>
-        <StepsRoot step={step} onStepChange={(e) => setStep(e.step)} count={3}>
-          <StepsContent index={0}>
-            <StepOne
-              nextStep={(data: FormDataStepOne) => {
-                setEmail(data.email);
-                setTerms(data.terms);
-                setStep(1);
-              }}
-              setLoading={setLoading}
-            />
+        <StepsRoot
+          data-testid="steps-root"
+          step={step}
+          onStepChange={(e) => setStep(e.step)}
+          count={3}
+        >
+          <StepsContent index={0} data-testid="steps-content-0">
+            <StepOne nextStep={handleStepOneNext} setLoading={setLoading} />
           </StepsContent>
 
-          <StepsContent index={1}>
+          <StepsContent index={1} data-testid="steps-content-1">
             <StepTwo
               setLoading={setLoading}
-              nextStep={() => setStep(2)}
-              setEmail={(email) => setEmail(email)}
+              nextStep={handleStepTwoNext}
+              setEmail={handleSetEmail}
               email={email}
               appwriteId={appwriteId}
               firstName={firstName}
@@ -135,7 +143,7 @@ export default function SignUpPage() {
               terms={terms}
             />
           </StepsContent>
-          <StepsContent index={2}>
+          <StepsContent index={2} data-testid="steps-content-2">
             <StepThree email={email} />
           </StepsContent>
         </StepsRoot>

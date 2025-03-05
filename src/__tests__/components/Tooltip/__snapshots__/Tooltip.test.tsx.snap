@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Tooltop Component render the tooltip with disabled prop 1`] = `
+<div>
+  Test
+</div>
+`;

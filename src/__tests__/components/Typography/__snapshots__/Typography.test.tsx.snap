@@ -1,0 +1,273 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Typography Component typography with variant Button renders the typography with fontWeight Bold 1`] = `
+.emotion-0 {
+  font-family: Lato;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 19px;
+}
+
+<div>
+  <p
+    class="emotion-0"
+  >
+    Test
+  </p>
+</div>
+`;
+
+exports[`Typography Component typography with variant Button renders the typography with fontWeight Default 1`] = `
+.emotion-0 {
+  font-family: Lato;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 19px;
+}
+
+<div>
+  <p
+    class="emotion-0"
+  >
+    Test
+  </p>
+</div>
+`;
+
+exports[`Typography Component typography with variant Button renders the typography with fontWeight Regular 1`] = `
+.emotion-0 {
+  font-family: Lato;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 19px;
+}
+
+<div>
+  <p
+    class="emotion-0"
+  >
+    Test
+  </p>
+</div>
+`;
+
+exports[`Typography Component typography with variant Button renders the typography with fontWeight Small 1`] = `
+.emotion-0 {
+  font-family: Lato;
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 19px;
+}
+
+<div>
+  <p
+    class="emotion-0"
+  >
+    Test
+  </p>
+</div>
+`;
+
+exports[`Typography Component typography with variant Default renders the typography with fontWeight Bold 1`] = `
+.emotion-0 {
+  font-family: Lato;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 21px;
+}
+
+<div>
+  <p
+    class="emotion-0"
+  >
+    Test
+  </p>
+</div>
+`;
+
+exports[`Typography Component typography with variant Default renders the typography with fontWeight Default 1`] = `
+.emotion-0 {
+  font-family: Lato;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+}
+
+<div>
+  <p
+    class="emotion-0"
+  >
+    Test
+  </p>
+</div>
+`;
+
+exports[`Typography Component typography with variant Default renders the typography with fontWeight Regular 1`] = `
+.emotion-0 {
+  font-family: Lato;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+}
+
+<div>
+  <p
+    class="emotion-0"
+  >
+    Test
+  </p>
+</div>
+`;
+
+exports[`Typography Component typography with variant Default renders the typography with fontWeight Small 1`] = `
+.emotion-0 {
+  font-family: Lato;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 21px;
+}
+
+<div>
+  <p
+    class="emotion-0"
+  >
+    Test
+  </p>
+</div>
+`;
+
+exports[`Typography Component typography with variant Regular renders the typography with fontWeight Bold 1`] = `
+.emotion-0 {
+  font-family: Lato;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 21px;
+}
+
+<div>
+  <p
+    class="emotion-0"
+  >
+    Test
+  </p>
+</div>
+`;
+
+exports[`Typography Component typography with variant Regular renders the typography with fontWeight Default 1`] = `
+.emotion-0 {
+  font-family: Lato;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+}
+
+<div>
+  <p
+    class="emotion-0"
+  >
+    Test
+  </p>
+</div>
+`;
+
+exports[`Typography Component typography with variant Regular renders the typography with fontWeight Regular 1`] = `
+.emotion-0 {
+  font-family: Lato;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+}
+
+<div>
+  <p
+    class="emotion-0"
+  >
+    Test
+  </p>
+</div>
+`;
+
+exports[`Typography Component typography with variant Regular renders the typography with fontWeight Small 1`] = `
+.emotion-0 {
+  font-family: Lato;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 21px;
+}
+
+<div>
+  <p
+    class="emotion-0"
+  >
+    Test
+  </p>
+</div>
+`;
+
+exports[`Typography Component typography with variant SmallRegular renders the typography with fontWeight Bold 1`] = `
+.emotion-0 {
+  font-family: Lato;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 18px;
+}
+
+<div>
+  <p
+    class="emotion-0"
+  >
+    Test
+  </p>
+</div>
+`;
+
+exports[`Typography Component typography with variant SmallRegular renders the typography with fontWeight Default 1`] = `
+.emotion-0 {
+  font-family: Lato;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 18px;
+}
+
+<div>
+  <p
+    class="emotion-0"
+  >
+    Test
+  </p>
+</div>
+`;
+
+exports[`Typography Component typography with variant SmallRegular renders the typography with fontWeight Regular 1`] = `
+.emotion-0 {
+  font-family: Lato;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 18px;
+}
+
+<div>
+  <p
+    class="emotion-0"
+  >
+    Test
+  </p>
+</div>
+`;
+
+exports[`Typography Component typography with variant SmallRegular renders the typography with fontWeight Small 1`] = `
+.emotion-0 {
+  font-family: Lato;
+  font-size: 12px;
+  font-weight: 300;
+  line-height: 18px;
+}
+
+<div>
+  <p
+    class="emotion-0"
+  >
+    Test
+  </p>
+</div>
+`;

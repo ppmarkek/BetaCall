@@ -39,7 +39,40 @@ export const userSignIn = async ({
   }
 };
 
-export const userGoogleSignIn = async ({
+export const userSignUp = async ({
+  email,
+  firstName,
+  lastName,
+  password,
+  appwriteId,
+  terms,
+}: {
+  email: string;
+  firstName: string;
+  lastName: string;
+  password: string;
+  appwriteId?: string;
+  terms: boolean;
+}): Promise<AxiosResponse<unknown>> => {
+  try {
+    const response = await axios.post<unknown>(`${authURL}/register`, {
+      email,
+      firstName,
+      lastName,
+      password,
+      appwriteId,
+      terms,
+    });
+    return response;
+  } catch (err) {
+    if (axios.isAxiosError(err) && err.response) {
+      return err.response as AxiosResponse<unknown>;
+    }
+    throw err;
+  }
+};
+
+export const userAppwriteSignIn = async ({
   email,
   appwriteId,
 }: {
@@ -67,39 +100,6 @@ export const resendVerification = async (email: string) => {
   try {
     const response = await axios.post(`${authURL}/resend-verification`, {
       email,
-    });
-    return response;
-  } catch (err) {
-    if (axios.isAxiosError(err) && err.response) {
-      return err.response as AxiosResponse<unknown>;
-    }
-    throw err;
-  }
-};
-
-export const userSignUp = async ({
-  email,
-  firstName,
-  lastName,
-  password,
-  appwriteId,
-  terms,
-}: {
-  email: string;
-  firstName: string;
-  lastName: string;
-  password: string;
-  appwriteId?: string;
-  terms: boolean;
-}): Promise<AxiosResponse<unknown>> => {
-  try {
-    const response = await axios.post<unknown>(`${authURL}/register`, {
-      email,
-      firstName,
-      lastName,
-      password,
-      appwriteId,
-      terms,
     });
     return response;
   } catch (err) {

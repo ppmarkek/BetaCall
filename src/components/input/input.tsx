@@ -13,6 +13,7 @@ type TextInputProps = Omit<
   placeholder?: string;
   error?: boolean;
   errorText?: string;
+  iconTestId?: string;
   onIconClick?: () => void;
 };
 
@@ -22,6 +23,7 @@ export default function TextInput({
   iconElement,
   error,
   errorText,
+  iconTestId,
   onIconClick,
   ...rest
 }: TextInputProps) {
@@ -55,6 +57,7 @@ export default function TextInput({
       </Tooltip>
       {IconComponent && (
         <Icon
+          data-testid={iconTestId || 'icon-textInput'}
           className={`input-icon ${error ? 'input-icon-error' : ''}`}
           position={'absolute'}
           right={0}
