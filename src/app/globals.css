@@ -8,6 +8,10 @@
   color: #1a1c1d;
 }
 
+body {
+  overflow-x: hidden;
+}
+
 .input-success {
   border-bottom: 1px solid #28c345 !important;
 }
