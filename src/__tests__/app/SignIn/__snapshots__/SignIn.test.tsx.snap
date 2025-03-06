@@ -399,9 +399,24 @@ exports[`Sign In Page matches the snapshot 1`] = `
   }
 }
 
+.emotion-19 svg {
+  fill: #fff;
+  -webkit-transition: fill 0.3s;
+  transition: fill 0.3s;
+}
+
+.emotion-19:focus-visible {
+  box-shadow: none!important;
+  outline: none!important;
+}
+
 .emotion-19:hover {
   background: unset;
   color: #6B59CC;
+}
+
+.emotion-19:hover svg {
+  fill: #6B59CC;
 }
 
 .emotion-20 {
@@ -601,6 +616,11 @@ exports[`Sign In Page matches the snapshot 1`] = `
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
     }
   }
+}
+
+.emotion-25:focus-visible {
+  box-shadow: none!important;
+  outline: none!important;
 }
 
 .emotion-25:hover {

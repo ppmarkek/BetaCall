@@ -7,7 +7,9 @@ import HomePage from '@/app/page';
 
 jest.mock('@/components/header/header', () => ({
   __esModule: true,
-  default: () => <div data-testid="mocked-header" />,
+  default: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="mocked-header">{children}</div>
+  ),
 }));
 
 describe('RootLayout', () => {

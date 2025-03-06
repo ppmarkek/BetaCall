@@ -1,4 +1,4 @@
-import { Box, Flex } from '@chakra-ui/react';
+import { Box, Flex, PopoverContent } from '@chakra-ui/react';
 import styled from '@emotion/styled';
 
 export const LeftNavigatior = styled(Flex)<{ bigWidth?: boolean }>`
@@ -161,4 +161,12 @@ export const SearchBarContainer = styled(Flex)<{ $active: boolean }>`
       color: #1a1c1d;
     }
   }
+`;
+
+export const StyledPopoverContent = styled(PopoverContent)`
+  position: absolute;
+  padding: 10px;
+  right: 0;
+  top: 50px;
+  width: auto;
 `;

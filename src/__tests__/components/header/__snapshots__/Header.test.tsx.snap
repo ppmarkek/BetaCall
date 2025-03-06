@@ -2,7 +2,13 @@
 
 exports[`Header Component matches the snapshot 1`] = `
 .emotion-0 {
-  border-bottom: 1px solid #EEEEEE;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  margin-left: 85px;
 }
 
 .emotion-1 {
@@ -10,18 +16,32 @@ exports[`Header Component matches the snapshot 1`] = `
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  padding: 0px 270px;
-  height: 80px;
+  width: 100%;
+  height: 85px;
+  border-bottom: 1px solid #eceef5;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  justify-content: space-between;
+  padding: 0px 30px;
 }
 
 .emotion-2 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 15px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.emotion-3 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -30,22 +50,295 @@ exports[`Header Component matches the snapshot 1`] = `
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  gap: 15px;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border: 1px solid #eceef5;
+  border-radius: 8px;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  cursor: pointer;
 }
 
-.emotion-3 {
-  object-fit: cover;
-  height: 45px;
-  width: 45px;
+.emotion-3:hover {
+  background: #eceef5;
 }
 
 .emotion-4 {
-  font-size: 28px;
+  width: 15px;
+  height: 2px;
+  background: #8083a3;
+}
+
+.emotion-4::after {
+  content: ' ';
+  position: absolute;
+  top: 13px;
+  width: 15px;
+  height: 2px;
+  -webkit-transform: none;
+  -moz-transform: none;
+  -ms-transform: none;
+  transform: none;
+  background: #8083a3;
+}
+
+.emotion-4::before {
+  content: ' ';
+  position: absolute;
+  bottom: 13px;
+  width: 15px;
+  height: 2px;
+  background: #8083a3;
+  -webkit-transform: none;
+  -moz-transform: none;
+  -ms-transform: none;
+  transform: none;
+}
+
+.emotion-5 {
+  font-family: Lato;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 32px;
 }
 
 .emotion-6 {
-  background-color: #ECEEF5;
-  --bg-currentcolor: #ECEEF5;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 20px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.emotion-7 {
+  position: relative;
+  width: 570px;
+  height: 40px;
+}
+
+.emotion-8 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  position: absolute;
+  right: 0;
+  border: 1px solid #eceef5;
+  background: #fff;
+  border-radius: 9px;
+  padding-left: 0;
+  -webkit-transition: width 0.3s ease,padding-left 0.3s ease,background-color 0.3s ease;
+  transition: width 0.3s ease,padding-left 0.3s ease,background-color 0.3s ease;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+}
+
+.emotion-8 .icon-container {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  right: 9px;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+
+.emotion-8 input {
+  width: calc(100% - 40px);
+  display: none;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 14px;
+  color: #1a1c1d;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.emotion-8 input::-webkit-input-placeholder {
+  color: #1a1c1d;
+}
+
+.emotion-8 input::-moz-placeholder {
+  color: #1a1c1d;
+}
+
+.emotion-8 input:-ms-input-placeholder {
+  color: #1a1c1d;
+}
+
+.emotion-8 input::placeholder {
+  color: #1a1c1d;
+}
+
+.emotion-9 {
+  fill: #8083A3;
+  font-size: 20px;
+}
+
+@layer recipes {
+  .emotion-9 {
+    display: inline-block;
+    line-height: 1em;
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    color: currentcolor;
+    vertical-align: middle;
+  }
+}
+
+.emotion-10 {
+  position: relative;
+}
+
+.emotion-11 {
+  cursor: pointer;
+}
+
+@layer recipes {
+  .emotion-11 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    font-weight: var(--chakra-font-weights-medium);
+    position: relative;
+    vertical-align: top;
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    width: var(--avatar-size);
+    height: var(--avatar-size);
+    font-size: var(--avatar-font-size);
+    border-radius: var(--avatar-radius);
+    --avatar-font-size: var(--chakra-font-sizes-md);
+    --avatar-size: var(--chakra-sizes-10);
+    --avatar-radius: var(--chakra-radii-l3);
+    background: var(--chakra-colors-color-palette-muted);
+    --bg-currentcolor: var(--chakra-colors-color-palette-muted);
+    color: var(--chakra-colors-color-palette-fg);
+  }
+
+  .emotion-11[data-group-item] {
+    border-width: 2px;
+    border-color: var(--chakra-colors-bg);
+  }
+}
+
+@layer recipes {
+  .emotion-12 {
+    line-height: 1;
+    text-transform: uppercase;
+    font-weight: var(--chakra-font-weights-medium);
+    font-size: var(--avatar-font-size);
+    border-radius: var(--avatar-radius);
+  }
+}
+
+@layer recipes {
+  .emotion-13 {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: var(--avatar-radius);
+  }
+}
+
+.emotion-14 {
+  position: absolute;
+  padding: 10px;
+  right: 0;
+  top: 50px;
+  width: auto;
+}
+
+@layer recipes {
+  .emotion-14 {
+    position: relative;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    --popover-bg: var(--chakra-colors-bg-panel);
+    background: var(--popover-bg);
+    --bg-currentcolor: var(--popover-bg);
+    box-shadow: var(--chakra-shadows-lg);
+    --popover-size: var(--chakra-sizes-xs);
+    --popover-mobile-size: calc(100dvw - 1rem);
+    width: min(var(--popover-mobile-size), var(--popover-size));
+    border-radius: var(--chakra-radii-l3);
+    --popover-z-index: var(--chakra-z-index-popover);
+    z-index: calc(var(--popover-z-index) + var(--layer-index, 0));
+    outline: 0;
+    transform-origin: var(--transform-origin);
+    max-height: var(--available-height);
+    --popover-padding: var(--chakra-spacing-5);
+  }
+
+  .emotion-14:is([open], [data-open], [data-state=open]) {
+    transform-origin: var(--transform-origin);
+    -webkit-animation-name: scale-in,fade-in;
+    animation-name: scale-in,fade-in;
+    -webkit-animation-duration: var(--chakra-durations-fast);
+    animation-duration: var(--chakra-durations-fast);
+  }
+
+  .emotion-14:is([closed], [data-closed], [data-state=closed]) {
+    transform-origin: var(--transform-origin);
+    -webkit-animation-name: scale-out,fade-out;
+    animation-name: scale-out,fade-out;
+    -webkit-animation-duration: var(--chakra-durations-faster);
+    animation-duration: var(--chakra-durations-faster);
+  }
+
+  @media screen and (min-width: 30rem) {
+    .emotion-14 {
+      width: var(--popover-size);
+    }
+  }
+}
+
+@layer recipes {
+  .emotion-15 {
+    padding: var(--popover-padding);
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+  }
+}
+
+.emotion-16 {
   height: 40px;
   font-size: 16px;
   font-weight: 700;
@@ -62,17 +355,17 @@ exports[`Header Component matches the snapshot 1`] = `
   gap: 10px;
   padding: 0 30px;
   border-radius: 10px;
-  width: 100%;
-  border: 1px solid #ECEEF5;
+  width: 150px;
+  border: 1px solid #6B59CC;
   background: unset;
-  color: #8083A3;
+  color: #6B59CC;
   -webkit-transition: all 0.3s;
   transition: all 0.3s;
   cursor: pointer;
 }
 
 @layer recipes {
-  .emotion-6 {
+  .emotion-16 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -120,19 +413,19 @@ exports[`Header Component matches the snapshot 1`] = `
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-6:is(:focus-visible, [data-focus-visible]) {
+  .emotion-16:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-6:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-16:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-6 :where(svg) {
+  .emotion-16 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -140,14 +433,14 @@ exports[`Header Component matches the snapshot 1`] = `
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-6:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-16:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-6:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-16:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
@@ -155,10 +448,221 @@ exports[`Header Component matches the snapshot 1`] = `
   }
 }
 
-.emotion-6:hover {
-  background: #8083A3;
-  color: #ECEEF5;
-  border: 1px solid #8083a3;
+.emotion-16 svg {
+  fill: #6B59CC;
+  -webkit-transition: fill 0.3s;
+  transition: fill 0.3s;
+}
+
+.emotion-16:focus-visible {
+  box-shadow: none!important;
+  outline: none!important;
+}
+
+.emotion-16:hover {
+  background: #6B59CC;
+  color: #fff;
+}
+
+.emotion-16:hover svg {
+  fill: #fff;
+}
+
+@layer recipes {
+  .emotion-17 {
+    display: inline-block;
+    line-height: 1em;
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    color: currentcolor;
+    vertical-align: middle;
+  }
+}
+
+.emotion-18 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  position: absolute;
+  height: 100svh;
+  width: 85px;
+  left: 0;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  border-right: 1px solid #eceef5;
+  min-height: 800px;
+  overflow: hidden;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+}
+
+.emotion-18 .activeIcon {
+  border-color: #eceef5;
+}
+
+.emotion-18 .activeBigBox {
+  background: #f8f9fc;
+}
+
+.emotion-19 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  position: absolute;
+  gap: 22px;
+  top: 20px;
+  left: 22px;
+}
+
+.emotion-20 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  gap: 15px;
+}
+
+.emotion-21 {
+  object-fit: cover;
+  height: 45px;
+  width: 45px;
+}
+
+.emotion-22 {
+  font-size: 28px;
+}
+
+.emotion-23 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+}
+
+.emotion-24 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  height: 70px;
+  width: 270px;
+  overflow: hidden;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+.emotion-24 p {
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+.emotion-24:hover p {
+  color: #1a1c1d;
+}
+
+.emotion-24:hover .iconBox {
+  border-color: #eceef5;
+}
+
+.emotion-25 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  margin: 0px 22px;
+  border: 1px solid #fff;
+  border-radius: 8px;
+  background: #fff;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+}
+
+.emotion-26 {
+  fill: #6B59CC;
+  width: 20px;
+  height: 20px;
+}
+
+@layer recipes {
+  .emotion-26 {
+    display: inline-block;
+    line-height: 1em;
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    color: currentcolor;
+    vertical-align: middle;
+  }
+}
+
+.emotion-27 {
+  color: #1A1C1D;
+  font-family: Lato;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 24px;
+}
+
+.emotion-30 {
+  fill: #8083A3;
+  width: 20px;
+  height: 20px;
+}
+
+@layer recipes {
+  .emotion-30 {
+    display: inline-block;
+    line-height: 1em;
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    color: currentcolor;
+    vertical-align: middle;
+  }
+}
+
+.emotion-31 {
+  color: #8083A3;
+  font-family: Lato;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 24px;
+}
+
+.emotion-56 {
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  margin-left: 85px;
+  padding: 60px 50px;
 }
 
 <div>
@@ -167,6 +671,7 @@ exports[`Header Component matches the snapshot 1`] = `
   >
     <div
       class="emotion-0"
+      data-testid="authenticated-header"
     >
       <div
         class="emotion-1"
@@ -174,36 +679,447 @@ exports[`Header Component matches the snapshot 1`] = `
         <div
           class="emotion-2"
         >
-          <img
-            alt="Icon"
-            class="chakra-image emotion-3"
-            src="/favicon.svg"
-          />
-          <p
-            class="emotion-4"
+          <div
+            class="emotion-3"
+            data-testid="open-menu"
           >
-            beta
-            <b>
-              call
-            </b>
-          </p>
+            <div
+              class="emotion-4"
+            />
+          </div>
+          <div
+            data-testid="header-title"
+          >
+            <p
+              class="emotion-5"
+            >
+              Dashboard
+            </p>
+          </div>
         </div>
         <div
-          class="emotion-5"
+          class="emotion-6"
         >
-          <a
-            href="/signIn"
+          <div
+            class="emotion-7"
           >
-            <button
-              class="chakra-button emotion-6"
+            <div
+              class="emotion-8"
+            >
+              <input
+                placeholder="Search..."
+              />
+              <svg
+                aria-hidden="true"
+                class="chakra-icon icon-container emotion-9"
+                fill="currentColor"
+                focusable="false"
+                height="1em"
+                stroke="currentColor"
+                stroke-width="0"
+                viewBox="0 0 512 512"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M337.509 305.372h-17.501l-6.571-5.486c20.791-25.232 33.922-57.054 33.922-93.257C347.358 127.632 283.896 64 205.135 64 127.452 64 64 127.632 64 206.629s63.452 142.628 142.225 142.628c35.011 0 67.831-13.167 92.991-34.008l6.561 5.487v17.551L415.18 448 448 415.086 337.509 305.372zm-131.284 0c-54.702 0-98.463-43.887-98.463-98.743 0-54.858 43.761-98.742 98.463-98.742 54.7 0 98.462 43.884 98.462 98.742 0 54.856-43.762 98.743-98.462 98.743z"
+                />
+              </svg>
+            </div>
+          </div>
+          <div
+            class="emotion-10"
+          >
+            <div
+              aria-controls="popover::r8::content"
+              aria-expanded="false"
+              aria-haspopup="dialog"
+              class="chakra-popover__trigger chakra-avatar__root emotion-11"
+              data-part="trigger"
+              data-scope="popover"
+              data-state="closed"
+              data-testid="avatar-button"
+              dir="ltr"
+              id="avatar:popover::r8::trigger"
               type="button"
             >
-              Sign In
-            </button>
+              <span
+                class="chakra-avatar__fallback emotion-12"
+                data-part="fallback"
+                data-scope="avatar"
+                data-state="visible"
+                dir="ltr"
+                id="avatar:popover::r8::trigger:fallback"
+              >
+                DA
+              </span>
+              <img
+                class="chakra-avatar__image emotion-13"
+                data-part="image"
+                data-scope="avatar"
+                data-state="hidden"
+                dir="ltr"
+                draggable="false"
+                hidden=""
+                id="avatar:popover::r8::trigger:image"
+                referrerpolicy="no-referrer"
+                src="/previewAvatar.png"
+              />
+            </div>
+            <div
+              aria-describedby="popover::r8::desc"
+              aria-labelledby="popover::r8::title"
+              class="chakra-popover__content emotion-14"
+              data-part="content"
+              data-scope="popover"
+              data-state="closed"
+              dir="ltr"
+              hidden=""
+              id="popover::r8::content"
+              role="dialog"
+              tabindex="-1"
+            >
+              <div
+                class="chakra-popover__body emotion-15"
+              >
+                <button
+                  class="chakra-button emotion-16"
+                  data-testid="logout-button"
+                  type="button"
+                >
+                  Logout
+                  <svg
+                    aria-hidden="true"
+                    class="chakra-icon emotion-17"
+                    fill="currentColor"
+                    focusable="false"
+                    height="1em"
+                    stroke="currentColor"
+                    stroke-width="0"
+                    viewBox="0 0 512 512"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M312 372c-7.7 0-14 6.3-14 14 0 9.9-8.1 18-18 18H94c-9.9 0-18-8.1-18-18V126c0-9.9 8.1-18 18-18h186c9.9 0 18 8.1 18 18 0 7.7 6.3 14 14 14s14-6.3 14-14c0-25.4-20.6-46-46-46H94c-25.4 0-46 20.6-46 46v260c0 25.4 20.6 46 46 46h186c25.4 0 46-20.6 46-46 0-7.7-6.3-14-14-14z"
+                    />
+                    <path
+                      d="M372.9 158.1c-2.6-2.6-6.1-4.1-9.9-4.1-3.7 0-7.3 1.4-9.9 4.1-5.5 5.5-5.5 14.3 0 19.8l65.2 64.2H162c-7.7 0-14 6.3-14 14s6.3 14 14 14h256.6L355 334.2c-5.4 5.4-5.4 14.3 0 19.8l.1.1c2.7 2.5 6.2 3.9 9.8 3.9 3.8 0 7.3-1.4 9.9-4.1l82.6-82.4c4.3-4.3 6.5-9.3 6.5-14.7 0-5.3-2.3-10.3-6.5-14.5l-84.5-84.2z"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="emotion-18"
+      >
+        <div
+          class="emotion-19"
+        >
+          <div
+            class="emotion-20"
+          >
+            <img
+              alt="Betacall Icon"
+              class="chakra-image emotion-21"
+              src="/favicon.svg"
+            />
+            <p
+              class="emotion-22"
+            >
+              beta
+              <b>
+                call
+              </b>
+            </p>
+          </div>
+        </div>
+        <div
+          class="emotion-23"
+        >
+          <a
+            href="/"
+          >
+            <div
+              class="emotion-24"
+            >
+              <div
+                class="activeIcon emotion-25"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="chakra-icon emotion-26"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 512 512"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M208 448V320h96v128h97.6V256H464L256 64 48 256h62.4v192z"
+                  />
+                </svg>
+              </div>
+              <p
+                class="emotion-27"
+              >
+                Dashboard
+              </p>
+            </div>
+          </a>
+          <a
+            href="/messages"
+          >
+            <div
+              class="emotion-24"
+            >
+              <div
+                class="iconBox emotion-25"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="chakra-icon emotion-30"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 16 16"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.5a1 1 0 0 0-.8.4l-1.9 2.533a1 1 0 0 1-1.6 0L5.3 12.4a1 1 0 0 0-.8-.4H2a2 2 0 0 1-2-2zm3.5 1a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1zm0 2.5a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1zm0 2.5a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1z"
+                  />
+                </svg>
+              </div>
+              <p
+                class="emotion-31"
+              >
+                Messenger
+              </p>
+            </div>
+          </a>
+          <a
+            href="/calls"
+          >
+            <div
+              class="emotion-24"
+            >
+              <div
+                class="iconBox emotion-25"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="chakra-icon emotion-30"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 512 512"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M426.666 330.667a250.385 250.385 0 0 1-75.729-11.729c-7.469-2.136-16-1.073-21.332 5.333l-46.939 46.928c-60.802-30.928-109.864-80-140.802-140.803l46.939-46.927c5.332-5.333 7.462-13.864 5.332-21.333-8.537-24.531-12.802-50.136-12.802-76.803C181.333 73.604 171.734 64 160 64H85.333C73.599 64 64 73.604 64 85.333 64 285.864 226.136 448 426.666 448c11.73 0 21.334-9.604 21.334-21.333V352c0-11.729-9.604-21.333-21.334-21.333z"
+                  />
+                </svg>
+              </div>
+              <p
+                class="emotion-31"
+              >
+                Calls
+              </p>
+            </div>
+          </a>
+          <a
+            href="/conference"
+          >
+            <div
+              class="emotion-24"
+            >
+              <div
+                class="iconBox emotion-25"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="chakra-icon emotion-30"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0V0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M4 6h18V4H4c-1.1 0-2 .9-2 2v11H0v3h14v-3H4V6zm19 2h-6c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h6c.55 0 1-.45 1-1V9c0-.55-.45-1-1-1zm-1 9h-4v-7h4v7z"
+                  />
+                </svg>
+              </div>
+              <p
+                class="emotion-31"
+              >
+                Conference
+              </p>
+            </div>
+          </a>
+          <a
+            href="/contacts"
+          >
+            <div
+              class="emotion-24"
+            >
+              <div
+                class="iconBox emotion-25"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="chakra-icon emotion-30"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 640 512"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M96 224c35.3 0 64-28.7 64-64s-28.7-64-64-64-64 28.7-64 64 28.7 64 64 64zm448 0c35.3 0 64-28.7 64-64s-28.7-64-64-64-64 28.7-64 64 28.7 64 64 64zm32 32h-64c-17.6 0-33.5 7.1-45.1 18.6 40.3 22.1 68.9 62 75.1 109.4h66c17.7 0 32-14.3 32-32v-32c0-35.3-28.7-64-64-64zm-256 0c61.9 0 112-50.1 112-112S381.9 32 320 32 208 82.1 208 144s50.1 112 112 112zm76.8 32h-8.3c-20.8 10-43.9 16-68.5 16s-47.6-6-68.5-16h-8.3C179.6 288 128 339.6 128 403.2V432c0 26.5 21.5 48 48 48h288c26.5 0 48-21.5 48-48v-28.8c0-63.6-51.6-115.2-115.2-115.2zm-223.7-13.4C161.5 263.1 145.6 256 128 256H64c-35.3 0-64 28.7-64 64v32c0 17.7 14.3 32 32 32h65.9c6.3-47.4 34.9-87.3 75.2-109.4z"
+                  />
+                </svg>
+              </div>
+              <p
+                class="emotion-31"
+              >
+                Contacts
+              </p>
+            </div>
+          </a>
+          <a
+            href="/screenshare"
+          >
+            <div
+              class="emotion-24"
+            >
+              <div
+                class="iconBox emotion-25"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="chakra-icon emotion-30"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0V0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M20 18c1.1 0 1.99-.9 1.99-2L22 6a2 2 0 0 0-2-2H4c-1.11 0-2 .89-2 2v10a2 2 0 0 0 2 2H0v2h24v-2h-4zM4 16V6h16v10.01L4 16zm9-6.87c-3.89.54-5.44 3.2-6 5.87 1.39-1.87 3.22-2.72 6-2.72v2.19l4-3.74L13 7v2.13z"
+                  />
+                </svg>
+              </div>
+              <p
+                class="emotion-31"
+              >
+                Screenshare
+              </p>
+            </div>
+          </a>
+          <a
+            href="/scheduale"
+          >
+            <div
+              class="emotion-24"
+            >
+              <div
+                class="iconBox emotion-25"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="chakra-icon emotion-30"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 448 512"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M148 288h-40c-6.6 0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40c0 6.6-5.4 12-12 12zm108-12v-40c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12zm96 0v-40c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12zm-96 96v-40c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12zm-96 0v-40c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12zm192 0v-40c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12zm96-260v352c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V112c0-26.5 21.5-48 48-48h48V12c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v52h128V12c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v52h48c26.5 0 48 21.5 48 48zm-48 346V160H48v298c0 3.3 2.7 6 6 6h340c3.3 0 6-2.7 6-6z"
+                  />
+                </svg>
+              </div>
+              <p
+                class="emotion-31"
+              >
+                Scheduale
+              </p>
+            </div>
+          </a>
+          <a
+            href="/settings"
+          >
+            <div
+              class="emotion-24"
+            >
+              <div
+                class="iconBox emotion-25"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="chakra-icon emotion-30"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 512 512"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M413.967 276.8c1.06-6.235 1.06-13.518 1.06-20.8s-1.06-13.518-1.06-20.8l44.667-34.318c4.26-3.118 5.319-8.317 2.13-13.518L418.215 115.6c-2.129-4.164-8.507-6.235-12.767-4.164l-53.186 20.801c-10.638-8.318-23.394-15.601-36.16-20.801l-7.448-55.117c-1.06-4.154-5.319-8.318-10.638-8.318h-85.098c-5.318 0-9.577 4.164-10.637 8.318l-8.508 55.117c-12.767 5.2-24.464 12.482-36.171 20.801l-53.186-20.801c-5.319-2.071-10.638 0-12.767 4.164L49.1 187.365c-2.119 4.153-1.061 10.399 2.129 13.518L96.97 235.2c0 7.282-1.06 13.518-1.06 20.8s1.06 13.518 1.06 20.8l-44.668 34.318c-4.26 3.118-5.318 8.317-2.13 13.518L92.721 396.4c2.13 4.164 8.508 6.235 12.767 4.164l53.187-20.801c10.637 8.318 23.394 15.601 36.16 20.801l8.508 55.117c1.069 5.2 5.318 8.318 10.637 8.318h85.098c5.319 0 9.578-4.164 10.638-8.318l8.518-55.117c12.757-5.2 24.464-12.482 36.16-20.801l53.187 20.801c5.318 2.071 10.637 0 12.767-4.164l42.549-71.765c2.129-4.153 1.06-10.399-2.13-13.518l-46.8-34.317zm-158.499 52c-41.489 0-74.46-32.235-74.46-72.8s32.971-72.8 74.46-72.8 74.461 32.235 74.461 72.8-32.972 72.8-74.461 72.8z"
+                  />
+                </svg>
+              </div>
+              <p
+                class="emotion-31"
+              >
+                Settings
+              </p>
+            </div>
           </a>
         </div>
       </div>
     </div>
   </header>
+  <div
+    class="emotion-56"
+  >
+    test
+  </div>
 </div>
 `;

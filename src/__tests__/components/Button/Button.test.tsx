@@ -11,46 +11,63 @@ import {
 import { LuTestTube } from 'react-icons/lu';
 
 describe('Button Component', () => {
-  it('renders the button with text', () => {
+  it('renders FilledButton with text', () => {
     render(<Button>Click me</Button>);
     expect(screen.getByText('Click me')).toBeInTheDocument();
   });
 
-  it('renders the button with an icon (IconButton variant)', () => {
+  it('renders OutlineButton correctly', () => {
+    render(<Button variant="Outline">Outline Button</Button>);
+    expect(screen.getByText('Outline Button')).toBeInTheDocument();
+  });
+
+  it('renders IconButton variant with icon', () => {
     render(
       <Button variant="IconButton" iconElement={LuTestTube}>
-        Click me
+        Icon Button
       </Button>
     );
     expect(screen.getByTestId('icon-component')).toBeInTheDocument();
   });
 
-  it('matches the snapshot', () => {
-    const { container } = render(<Button>Snapshot Button</Button>);
+  it('matches snapshot for FilledButton', () => {
+    const { container } = render(<Button>Snapshot FilledButton</Button>);
+    expect(container).toMatchSnapshot();
+  });
+
+  it('matches snapshot for OutlineButton', () => {
+    const { container } = render(
+      <Button variant="Outline">Snapshot OutlineButton</Button>
+    );
+    expect(container).toMatchSnapshot();
+  });
+
+  it('matches snapshot for IconButton', () => {
+    const { container } = render(
+      <Button variant="IconButton" iconElement={LuTestTube}>
+        Snapshot IconButton
+      </Button>
+    );
     expect(container).toMatchSnapshot();
   });
 });
 
 describe('Styled Components (style.ts)', () => {
   describe('FilledButton', () => {
-    it('matches snapshot with default height and width', () => {
-      const { container } = render(<FilledButton>Test</FilledButton>);
+    it('renders with default properties', () => {
+      const { container } = render(<FilledButton>Filled</FilledButton>);
       expect(container).toMatchSnapshot();
     });
 
-    it('matches snapshot with custom height and width', () => {
+    it('renders with custom properties', () => {
       const { container } = render(
-        <FilledButton buttonHeight="60px" buttonWidth="200px">
-          Test
-        </FilledButton>
-      );
-      expect(container).toMatchSnapshot();
-    });
-
-    it('matches snapshot for hover styles', () => {
-      const { container } = render(
-        <FilledButton bgColor="#000" textColor="#fff">
-          Test
+        <FilledButton
+          buttonHeight="60px"
+          buttonWidth="200px"
+          bgColor="#123456"
+          textColor="#abcdef"
+        >
+          Custom Filled
         </FilledButton>
       );
       expect(container).toMatchSnapshot();
@@ -58,15 +75,20 @@ describe('Styled Components (style.ts)', () => {
   });
 
   describe('OutlineButton', () => {
-    it('matches snapshot with default height and width', () => {
-      const { container } = render(<OutlineButton>Test</OutlineButton>);
+    it('renders with default properties', () => {
+      const { container } = render(<OutlineButton>Outline</OutlineButton>);
       expect(container).toMatchSnapshot();
     });
 
-    it('matches snapshot for hover styles', () => {
+    it('renders with custom properties', () => {
       const { container } = render(
-        <OutlineButton bgColor="#000" textColor="#fff">
-          Test
+        <OutlineButton
+          buttonHeight="60px"
+          buttonWidth="200px"
+          bgColor="#654321"
+          textColor="#fedcba"
+        >
+          Custom Outline
         </OutlineButton>
       );
       expect(container).toMatchSnapshot();
@@ -74,20 +96,15 @@ describe('Styled Components (style.ts)', () => {
   });
 
   describe('LeftIconButton', () => {
-    it('matches snapshot with default width and height', () => {
-      const { container } = render(<LeftIconButton>Test</LeftIconButton>);
-      expect(container).toMatchSnapshot();
-    });
-
-    it('matches snapshot for hover styles', () => {
-      const { container } = render(<LeftIconButton>Test</LeftIconButton>);
+    it('renders correctly', () => {
+      const { container } = render(<LeftIconButton>Left Icon</LeftIconButton>);
       expect(container).toMatchSnapshot();
     });
   });
 
   describe('IconBox', () => {
-    it('matches snapshot with fixed dimensions and border radius', () => {
-      const { container } = render(<IconBox>Icon</IconBox>);
+    it('renders correctly', () => {
+      const { container } = render(<IconBox>IconBox</IconBox>);
       expect(container).toMatchSnapshot();
     });
   });

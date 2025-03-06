@@ -23,9 +23,24 @@ export const FilledButton = styled(Button)<{
   color: ${({ textColor }) => textColor || '#fff'};
   transition: all 0.3s;
   cursor: pointer;
+
+  svg {
+    fill: ${({ textColor }) => textColor || '#fff'};
+    transition: fill 0.3s;
+  }
+
+  :focus-visible {
+    box-shadow: none !important;
+    outline: none !important;
+  }
+
   :hover {
     background: unset;
     color: ${({ bgColor }) => bgColor || '#6B59CC'};
+
+    svg {
+      fill: ${({ bgColor }) => bgColor || '#6B59CC'};
+    }
   }
 `;
 
@@ -48,13 +63,27 @@ export const OutlineButton = styled(Button)<{
   width: ${({ buttonWidth }) => buttonWidth || '100%'};
   border: 1px solid ${({ bgColor }) => bgColor || '#6B59CC'};
   background: unset;
-  color: ${({ textColor }) => textColor || '#fff'};
+  color: ${({ textColor }) => textColor || '#6B59CC'};
   transition: all 0.3s;
   cursor: pointer;
+
+  svg {
+    fill: ${({ bgColor }) => bgColor || '#6B59CC'};
+    transition: fill 0.3s;
+  }
+
+  :focus-visible {
+    box-shadow: none !important;
+    outline: none !important;
+  }
+
   :hover {
-    background: ${({ textColor }) => textColor || '#fff'};
-    color: ${({ bgColor }) => bgColor || '#6B59CC'};
-    border: 1px solid #8083a3;
+    background: ${({ textColor }) => textColor || '#6B59CC'};
+    color: ${({ bgColor }) => bgColor || '#fff'};
+
+    svg {
+      fill: ${({ bgColor }) => bgColor || '#fff'};
+    }
   }
 `;
 
@@ -77,6 +106,12 @@ export const LeftIconButton = styled(Button)`
   color: #8083a3;
   transition: all 0.3s;
   cursor: pointer;
+
+  :focus-visible {
+    box-shadow: none !important;
+    outline: none !important;
+  }
+
   :hover {
     background: #8083a3;
     color: #eceef5;

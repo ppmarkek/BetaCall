@@ -1,8 +1,18 @@
 'use client';
-import { Avatar, Box, Flex, Icon, Image, Text } from '@chakra-ui/react';
+import {
+  Avatar,
+  Box,
+  Flex,
+  Icon,
+  Image,
+  PopoverBody,
+  PopoverRoot,
+  PopoverTrigger,
+  Text,
+} from '@chakra-ui/react';
 import { JSX, memo, useEffect, useRef, useState } from 'react';
 import Button from '../button/button';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import {
   BorderBox,
@@ -13,8 +23,15 @@ import {
   SearchBarContainer,
   StyledIconBigBox,
   StyledIconBox,
+  StyledPopoverContent,
 } from './style';
-import { IoMdHome, IoMdCall, IoMdSettings, IoMdSearch } from 'react-icons/io';
+import {
+  IoMdHome,
+  IoMdCall,
+  IoMdSettings,
+  IoMdSearch,
+  IoIosLogOut,
+} from 'react-icons/io';
 import { BsChatSquareTextFill } from 'react-icons/bs';
 import { MdOutlineDevices, MdOutlineScreenShare } from 'react-icons/md';
 import { FaUsers, FaRegCalendarAlt } from 'react-icons/fa';
@@ -35,7 +52,7 @@ const ICONS = [
   { link: '/settings', title: 'Settings', icon: <IoMdSettings /> },
 ];
 
-function formatPathname(path: string): string {
+function formatPathname(path: string = ''): string {
   const formatted = path
     .replace(/^\//, '')
     .replace(/-/g, ' ')
@@ -44,14 +61,11 @@ function formatPathname(path: string): string {
 }
 
 function checkAuthentication(): boolean {
-  if (typeof document !== 'undefined') {
-    const token = document.cookie
-      .split('; ')
-      .find((row) => row.startsWith('accessToken='))
-      ?.split('=')[1];
-    return !!token;
-  }
-  return false;
+  const token = document.cookie
+    .split('; ')
+    .find((row) => row.startsWith('accessToken='))
+    ?.split('=')[1];
+  return !!token;
 }
 
 function useClickOutside<T extends HTMLElement>(
@@ -169,23 +183,38 @@ function AuthenticatedHeader({
   const [searchActive, setSearchActive] = useState(false);
   const searchRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const router = useRouter();
 
   useClickOutside<HTMLDivElement>(searchRef, () => setSearchActive(false));
+
+  const handleLogout = () => {
+    document.cookie = `accessToken=; path=/; Secure; SameSite=Strict;`;
+    document.cookie = `refreshToken=; path=/; Secure; SameSite=Strict;`;
+    router.push('/signIn');
+  };
 
   useEffect(() => {
     if (searchActive) {
       inputRef.current?.focus();
+    } else {
+      inputRef.current?.blur();
     }
   }, [searchActive]);
 
   return (
-    <Flex transition="all 0.3s" marginLeft={isBigMenu ? '270px' : '85px'}>
+    <Flex
+      data-testid="authenticated-header"
+      transition="all 0.3s"
+      marginLeft={isBigMenu ? '270px' : '85px'}
+    >
       <Navigatior>
         <Flex gap="15px" alignItems="center">
-          <MenuIcon onClick={toggleBigMenu}>
+          <MenuIcon data-testid="open-menu" onClick={toggleBigMenu}>
             <BorderBox bigMenu={isBigMenu} />
           </MenuIcon>
-          <Typography variant="H3">{formattedPath}</Typography>
+          <div data-testid="header-title">
+            <Typography variant="H3">{formattedPath}</Typography>
+          </div>
         </Flex>
         <Flex gap="20px" alignItems="center">
           <Box position="relative" width="570px" height="40px">
@@ -203,10 +232,32 @@ function AuthenticatedHeader({
               />
             </SearchBarContainer>
           </Box>
-          <Avatar.Root cursor="pointer" shape="rounded" size="md">
-            <Avatar.Fallback name="Diana Adebayo" />
-            <Avatar.Image src="/previewAvatar.png" />
-          </Avatar.Root>
+          <Box position={'relative'}>
+            <PopoverRoot>
+              <PopoverTrigger data-testid="avatar-button" asChild>
+                <Avatar.Root cursor="pointer" shape="rounded" size="md">
+                  <Avatar.Fallback name="Diana Adebayo" />
+                  <Avatar.Image src="/previewAvatar.png" />
+                </Avatar.Root>
+              </PopoverTrigger>
+              <StyledPopoverContent>
+                <PopoverBody>
+                  <Button
+                    onClick={handleLogout}
+                    variant="Outline"
+                    width="150px"
+                    height="40px"
+                    data-testid="logout-button"
+                  >
+                    Logout
+                    <Icon>
+                      <IoIosLogOut />
+                    </Icon>
+                  </Button>
+                </PopoverBody>
+              </StyledPopoverContent>
+            </PopoverRoot>
+          </Box>
         </Flex>
       </Navigatior>
       <LeftNavigatior bigWidth={isBigMenu}>
