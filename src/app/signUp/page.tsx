@@ -56,6 +56,7 @@ export default function SignUpPage() {
           if (response.status === 200) {
             document.cookie = `accessToken=${response.data.accessToken}; path=/; Secure; SameSite=Strict;`;
             document.cookie = `refreshToken=${response.data.refreshToken}; path=/; Secure; SameSite=Strict;`;
+            //here
             router.push('/');
             navigated = true;
           } else if (response.status === 403) {
