@@ -6,10 +6,19 @@ import { FaFolder } from 'react-icons/fa';
 import { IoMdStar, IoMdAlarm } from 'react-icons/io';
 import { BorderBox, LeftPanel, LeftPanelButton, Wrapper } from './style';
 import Typography from '@/components/typography/typography';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 
 export default function MessagesPage() {
-  const [selectMenu, setSelectMenu] = useState('All Inbox');
+  const searchParams = useSearchParams();
+  const menu = searchParams.get('menu');
+  const [selectMenu, setSelectMenu] = useState(menu || 'All Inbox');
+
+  useEffect(() => {
+    if (menu && menu !== selectMenu) {
+      setSelectMenu(menu);
+    }
+  }, [menu, selectMenu]);
 
   const leftButtonsArray = [
     {
@@ -29,22 +38,36 @@ export default function MessagesPage() {
     },
   ];
 
+  const updateSearchParam = (value: string) => {
+    const params = new URLSearchParams(searchParams);
+    params.set('menu', value);
+    window.history.replaceState(null, '', `/messages?${params.toString()}`);
+  };
+
   return (
     <Wrapper>
       <LeftPanel>
         <Box>
-          {leftButtonsArray.map((value, len) => (
-            <Box key={value.title} onClick={() => setSelectMenu(value.title)}>
-              <LeftPanelButton className={selectMenu === value.title ? 'active': ''}>
-                <Icon as={value.icon} />
+          {leftButtonsArray.map((item, len) => (
+            <Box
+              key={item.title}
+              onClick={() => {
+                setSelectMenu(item.title);
+                updateSearchParam(item.title);
+              }}
+            >
+              <LeftPanelButton
+                className={selectMenu === item.title ? 'active' : ''}
+              >
+                <Icon as={item.icon} />
                 <Flex flexDirection="column" alignItems="flex-start">
                   <Typography variant="H5" className="titleText">
-                    {value.title}
+                    {item.title}
                   </Typography>
-                  <Typography color="#8083A3">{value.label}</Typography>
+                  <Typography color="#8083A3">{item.label}</Typography>
                 </Flex>
               </LeftPanelButton>
-              {len !== 2 && <BorderBox />}
+              {len !== leftButtonsArray.length - 1 && <BorderBox />}
             </Box>
           ))}
         </Box>
