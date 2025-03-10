@@ -306,11 +306,7 @@ function Header({ children }: HeaderProps) {
           />
         )}
       </header>
-      <Box
-        transition="all 0.3s"
-        marginLeft={isBigMenu ? '270px' : '85px'}
-        padding="60px 50px"
-      >
+      <Box transition="all 0.3s" marginLeft={isBigMenu ? '270px' : '85px'}>
         {children}
       </Box>
     </>
