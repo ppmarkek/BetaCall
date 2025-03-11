@@ -16,13 +16,16 @@ import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import {
   BorderBox,
+  BorderPadding,
   IconBox,
   LeftNavigatior,
   MenuIcon,
+  MessagesHeader,
   Navigatior,
   SearchBarContainer,
   StyledIconBigBox,
   StyledIconBox,
+  StyledIconHeader,
   StyledPopoverContent,
 } from './style';
 import {
@@ -31,10 +34,21 @@ import {
   IoMdSettings,
   IoMdSearch,
   IoIosLogOut,
+  IoMdMore,
 } from 'react-icons/io';
 import { BsChatSquareTextFill } from 'react-icons/bs';
-import { MdOutlineDevices, MdOutlineScreenShare } from 'react-icons/md';
-import { FaUsers, FaRegCalendarAlt } from 'react-icons/fa';
+import {
+  MdOutlineDevices,
+  MdOutlineScreenShare,
+  MdTune,
+  MdModeEdit,
+} from 'react-icons/md';
+import {
+  FaUsers,
+  FaRegCalendarAlt,
+  FaAngleLeft,
+  FaAngleRight,
+} from 'react-icons/fa';
 import Typography from '../typography/typography';
 
 const ICONS = [
@@ -193,6 +207,41 @@ function AuthenticatedHeader({
     router.push('/signIn');
   };
 
+  const handleFlexibleHeader = () => {
+    if (formattedPath === 'Messages') {
+      return (
+        <MessagesHeader>
+          <Flex alignItems={'center'}>
+            <Flex gap={'10px'}>
+              <StyledIconHeader>
+                <Icon size={'md'} as={FaAngleLeft} />
+              </StyledIconHeader>
+              <StyledIconHeader>
+                <Icon size={'md'} as={FaAngleRight} />
+              </StyledIconHeader>
+            </Flex>
+            <BorderPadding />
+            <Flex gap={'10px'}>
+              <StyledIconHeader>
+                <Icon size={'md'} as={MdTune} />
+              </StyledIconHeader>
+              <StyledIconHeader>
+                <Icon size={'md'} as={IoMdMore} />
+              </StyledIconHeader>
+            </Flex>
+          </Flex>
+
+          <Flex alignItems={'center'}>
+            <StyledIconHeader>
+              <Icon size={'md'} as={MdModeEdit} />
+            </StyledIconHeader>
+            <BorderPadding />
+          </Flex>
+        </MessagesHeader>
+      );
+    }
+  };
+
   useEffect(() => {
     if (searchActive) {
       inputRef.current?.focus();
@@ -208,7 +257,7 @@ function AuthenticatedHeader({
       marginLeft={isBigMenu ? '270px' : '85px'}
     >
       <Navigatior>
-        <Flex gap="15px" alignItems="center">
+        <Flex width={'calc(20% - 20px)'} gap="15px" alignItems="center">
           <MenuIcon data-testid="open-menu" onClick={toggleBigMenu}>
             <BorderBox bigMenu={isBigMenu} />
           </MenuIcon>
@@ -216,7 +265,8 @@ function AuthenticatedHeader({
             <Typography variant="H3">{formattedPath}</Typography>
           </div>
         </Flex>
-        <Flex gap="20px" alignItems="center">
+        {handleFlexibleHeader()}
+        <Flex width="100px" gap="20px" alignItems="center">
           <Box position="relative" width="570px" height="40px">
             <SearchBarContainer
               $active={searchActive}
@@ -232,7 +282,7 @@ function AuthenticatedHeader({
               />
             </SearchBarContainer>
           </Box>
-          <Box position={'relative'}>
+          <Box position="relative">
             <PopoverRoot>
               <PopoverTrigger data-testid="avatar-button" asChild>
                 <Avatar.Root cursor="pointer" shape="rounded" size="md">
@@ -306,10 +356,7 @@ function Header({ children }: HeaderProps) {
           />
         )}
       </header>
-      <Box
-        transition="all 0.3s"
-        marginLeft={isBigMenu ? '270px' : '85px'}
-      >
+      <Box transition="all 0.3s" marginLeft={isBigMenu ? '270px' : '85px'}>
         {children}
       </Box>
     </>
