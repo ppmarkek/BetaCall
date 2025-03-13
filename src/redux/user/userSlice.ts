@@ -154,7 +154,6 @@ export const userSlice = createSlice({
       })
       .addCase(signInUser.fulfilled, (state, action) => {
         state.loading = false;
-        console.log(':::user', action.payload);
         Object.assign(state, action.payload);
       })
       .addCase(signInUser.rejected, (state, action) => {
