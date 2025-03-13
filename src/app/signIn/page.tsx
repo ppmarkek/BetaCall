@@ -9,11 +9,13 @@ import { FaEye } from 'react-icons/fa6';
 import TextInput from '@/components/input/input';
 import Typography from '@/components/typography/typography';
 import Button from '@/components/button/button';
-import { userSignIn, userAppwriteSignIn } from '../api/auth/route';
 import { StyledCheckbox, StyledLink, Wrapper, BoxOr } from './style';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { account } from '@/lib/appwrite';
 import { OAuthProvider } from 'appwrite';
+import { useDispatch, useSelector } from 'react-redux';
+import { signInUser, signInUserAppwrite } from '@/redux/user/userSlice';
+import { AppDispatch, RootState } from '@/redux/store';
 
 interface FormDataSignIn {
   email: string;
@@ -26,7 +28,10 @@ export default function SignInPage() {
   const socialMediaParam = searchParams.get('socialMedia');
   const [showPassword, setShowPassword] = useState(false);
   const [errorLogin, setErrorLogin] = useState(false);
-  const [loading, setLoading] = useState(Boolean(socialMediaParam));
+  const [localLoading, setLocalLoading] = useState(Boolean(socialMediaParam));
+
+  const { loading } = useSelector((state: RootState) => state.user);
+  const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
 
   const {
@@ -38,28 +43,30 @@ export default function SignInPage() {
   const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
 
   const onSubmit = async (data: FormDataSignIn) => {
-    setLoading(true);
-    try {
-      const response = await userSignIn(data);
+    const result = await dispatch(
+      signInUser({ email: data.email, password: data.password })
+    );
 
-      if (response.status === 200) {
-        document.cookie = `accessToken=${response.data.accessToken}; path=/; Secure; SameSite=Strict;`;
-        document.cookie = `refreshToken=${response.data.refreshToken}; path=/; Secure; SameSite=Strict;`;
-        //here
-        router.push('/');
-      } else if (response.status === 403) {
-        router.push(`/verify/${data.email}`);
-      } else if (response.status >= 400) {
-        setErrorLogin(true);
-      }
-    } catch (err) {
-      console.error(err);
+    if (signInUser.fulfilled.match(result)) {
+      router.push('/');
+    } else if (
+      result.payload &&
+      typeof result.payload === 'object' &&
+      'verificationRequired' in result.payload &&
+      result.payload.verificationRequired
+    ) {
+      router.push(`/verify/${data.email}`);
+    } else if (
+      result.payload &&
+      typeof result.payload === 'object' &&
+      'message' in result.payload
+    ) {
+      setErrorLogin(true);
     }
-    setLoading(false);
   };
 
   const handleGoogleLogin = () => {
-    setLoading(true);
+    setLocalLoading(true);
     account.createOAuth2Session(
       OAuthProvider.Google,
       'http://localhost:3000/signIn?socialMedia=true',
@@ -68,7 +75,7 @@ export default function SignInPage() {
   };
 
   const handleGithubLogin = () => {
-    setLoading(true);
+    setLocalLoading(true);
     account.createOAuth2Session(
       OAuthProvider.Github,
       'http://localhost:3000/signIn?socialMedia=true',
@@ -79,48 +86,42 @@ export default function SignInPage() {
   useEffect(() => {
     if (!socialMediaParam) return;
 
-    const params = new URLSearchParams(searchParams.toString());
-    let navigated = false;
-
     account
       .get()
       .then(async (data) => {
         if (data) {
-          const response = await userAppwriteSignIn({
-            email: data.email,
-            appwriteId: data.$id,
-          });
-          if (response.status === 200) {
-            if (params.has('socialMedia')) {
-              params.delete('socialMedia');
-              const newUrl = `?${params.toString()}`;
-              window.history.replaceState(null, '', newUrl);
-            }
-            document.cookie = `accessToken=${response.data.accessToken}; path=/; Secure; SameSite=Strict;`;
-            document.cookie = `refreshToken=${response.data.refreshToken}; path=/; Secure; SameSite=Strict;`;
-            //here
+          const result = await dispatch(
+            signInUserAppwrite({
+              email: data.email,
+              appwriteId: data.$id,
+              name: data.name,
+            })
+          );
+
+          if (signInUserAppwrite.fulfilled.match(result)) {
             router.push('/');
-            navigated = true;
-          } else if (response.status === 403) {
-            router.push(`/verify/${data.email}`);
-            navigated = true;
-          } else if (response.status === 404) {
-            const [firstName, lastName] = data.name.split(' ');
-            if (params.has('socialMedia')) {
-              params.delete('socialMedia');
-              const newUrl = `?${params.toString()}`;
-              window.history.replaceState(null, '', newUrl);
+          } else if (
+            result.payload &&
+            typeof result.payload === 'object' &&
+            'redirectToSignUp' in result.payload &&
+            result.payload.redirectToSignUp
+          ) {
+            if ('signUpUrl' in result.payload) {
+              router.push(result.payload.signUpUrl as string);
             }
-            router.push(
-              `/signUp?socialMedia=true&step=2&email=${encodeURIComponent(
-                data.email
-              )}&appwriteId=${encodeURIComponent(
-                data.$id
-              )}&firstName=${encodeURIComponent(
-                firstName
-              )}&lastName=${encodeURIComponent(lastName)}`
-            );
-            navigated = true;
+          } else if (
+            result.payload &&
+            typeof result.payload === 'object' &&
+            'verificationRequired' in result.payload &&
+            result.payload.verificationRequired
+          ) {
+            router.push(`/verify/${data.email}`);
+          } else if (
+            result.payload &&
+            typeof result.payload === 'object' &&
+            'message' in result.payload
+          ) {
+            setErrorLogin(true);
           }
         }
       })
@@ -130,13 +131,11 @@ export default function SignInPage() {
         }
       })
       .finally(() => {
-        if (!navigated) {
-          setLoading(false);
-        }
+        setLocalLoading(false);
       });
-  }, [router, socialMediaParam, searchParams]);
+  }, [socialMediaParam, dispatch, router]);
 
-  if (loading) {
+  if (localLoading || loading) {
     return (
       <Flex
         height="calc(100svh - 81px)"
