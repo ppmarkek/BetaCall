@@ -16,6 +16,18 @@ type FormDataStepOne = {
   terms: boolean;
 };
 
+interface UserInterface {
+  _id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  role: string;
+  appwriteId: string;
+  verified: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export default function SignUpPage() {
   const searchParams = useSearchParams();
   const search = searchParams.get('socialMedia');
@@ -26,8 +38,9 @@ export default function SignUpPage() {
   const [lastName, setLastName] = useState('');
   const [terms, setTerms] = useState(false);
   const [localLoading, setLocalLoading] = useState(Boolean(search));
-
-  const { loading } = useSelector((state: RootState) => state.user);
+  const { loading } = useSelector(
+    (state: RootState & { user: UserInterface }) => state.user
+  );
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
 
@@ -45,9 +58,9 @@ export default function SignUpPage() {
   useEffect(() => {
     if (!search) return;
 
-    account
-      .get()
-      .then(async (data) => {
+    async function handleOAuthSignUp() {
+      try {
+        const data = await account.get();
         const params = new URLSearchParams(searchParams.toString());
         params.delete('socialMedia');
         const newUrl = `?${params.toString()}`;
@@ -60,16 +73,17 @@ export default function SignUpPage() {
               name: data.name,
             })
           );
-
           if (signUpUserAppwrite.fulfilled.match(result)) {
-            router.push('/');
+            await router.push('/');
+            return;
           } else if (
             result.payload &&
             typeof result.payload === 'object' &&
             'verificationRequired' in result.payload &&
             result.payload.verificationRequired
           ) {
-            router.push(`/verify/${data.email}`);
+            await router.push(`/verify/${data.email}`);
+            return;
           } else if (
             result.payload &&
             typeof result.payload === 'object' &&
@@ -83,17 +97,17 @@ export default function SignUpPage() {
             setStep(1);
           }
         }
-      })
-      .catch((error) => {
-        if (error.message.includes('missing scope')) {
+      } catch (error) {
+        if (error instanceof Error && error.message.includes('missing scope')) {
           setLocalLoading(false);
         } else {
           console.error('Error fetching google account data:', error);
         }
-      })
-      .finally(() => {
-        setLocalLoading(false);
-      });
+      }
+      setLocalLoading(false);
+    }
+
+    handleOAuthSignUp();
   }, [search, searchParams, router, dispatch]);
 
   useEffect(() => {

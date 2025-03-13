@@ -42,29 +42,6 @@ export default function SignInPage() {
 
   const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
 
-  const onSubmit = async (data: FormDataSignIn) => {
-    const result = await dispatch(
-      signInUser({ email: data.email, password: data.password })
-    );
-
-    if (signInUser.fulfilled.match(result)) {
-      router.push('/');
-    } else if (
-      result.payload &&
-      typeof result.payload === 'object' &&
-      'verificationRequired' in result.payload &&
-      result.payload.verificationRequired
-    ) {
-      router.push(`/verify/${data.email}`);
-    } else if (
-      result.payload &&
-      typeof result.payload === 'object' &&
-      'message' in result.payload
-    ) {
-      setErrorLogin(true);
-    }
-  };
-
   const handleGoogleLogin = () => {
     setLocalLoading(true);
     account.createOAuth2Session(
@@ -83,12 +60,39 @@ export default function SignInPage() {
     );
   };
 
+  const onSubmit = async (data: FormDataSignIn) => {
+    setLocalLoading(true);
+    const result = await dispatch(
+      signInUser({ email: data.email, password: data.password })
+    );
+
+    if (signInUser.fulfilled.match(result)) {
+      await router.push('/');
+      return;
+    } else if (
+      result.payload &&
+      typeof result.payload === 'object' &&
+      'verificationRequired' in result.payload &&
+      result.payload.verificationRequired
+    ) {
+      await router.push(`/verify/${data.email}`);
+      return;
+    } else if (
+      result.payload &&
+      typeof result.payload === 'object' &&
+      'message' in result.payload
+    ) {
+      setErrorLogin(true);
+    }
+    setLocalLoading(false);
+  };
+
   useEffect(() => {
     if (!socialMediaParam) return;
 
-    account
-      .get()
-      .then(async (data) => {
+    async function handleOAuth() {
+      try {
+        const data = await account.get();
         if (data) {
           const result = await dispatch(
             signInUserAppwrite({
@@ -97,9 +101,9 @@ export default function SignInPage() {
               name: data.name,
             })
           );
-
           if (signInUserAppwrite.fulfilled.match(result)) {
-            router.push('/');
+            await router.push('/');
+            return;
           } else if (
             result.payload &&
             typeof result.payload === 'object' &&
@@ -107,7 +111,8 @@ export default function SignInPage() {
             result.payload.redirectToSignUp
           ) {
             if ('signUpUrl' in result.payload) {
-              router.push(result.payload.signUpUrl as string);
+              await router.push(result.payload.signUpUrl as string);
+              return;
             }
           } else if (
             result.payload &&
@@ -115,7 +120,8 @@ export default function SignInPage() {
             'verificationRequired' in result.payload &&
             result.payload.verificationRequired
           ) {
-            router.push(`/verify/${data.email}`);
+            await router.push(`/verify/${data.email}`);
+            return;
           } else if (
             result.payload &&
             typeof result.payload === 'object' &&
@@ -124,15 +130,15 @@ export default function SignInPage() {
             setErrorLogin(true);
           }
         }
-      })
-      .catch((error) => {
-        if (!error.message.includes('missing scope')) {
+      } catch (error) {
+        if (error instanceof Error && !error.message.includes('missing scope')) {
           console.error('Error fetching google account data:', error);
         }
-      })
-      .finally(() => {
-        setLocalLoading(false);
-      });
+      }
+      setLocalLoading(false);
+    }
+
+    handleOAuth();
   }, [socialMediaParam, dispatch, router]);
 
   if (localLoading || loading) {
