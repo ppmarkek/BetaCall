@@ -36,6 +36,7 @@ import {
   IoIosLogOut,
   IoMdMore,
 } from 'react-icons/io';
+import { IoPersonAddSharp } from 'react-icons/io5';
 import { BsChatSquareTextFill } from 'react-icons/bs';
 import {
   MdOutlineDevices,
@@ -239,6 +240,28 @@ function AuthenticatedHeader({
           <Flex alignItems={'center'}>
             <StyledIconHeader>
               <Icon size={'md'} as={MdModeEdit} />
+            </StyledIconHeader>
+            <BorderPadding />
+          </Flex>
+        </MessagesHeader>
+      );
+    }
+
+    if (formattedPath === 'Contacts') {
+      return (
+        <MessagesHeader>
+          <Flex gap={'10px'}>
+            <StyledIconHeader>
+              <Icon size={'md'} as={MdTune} />
+            </StyledIconHeader>
+            <StyledIconHeader>
+              <Icon size={'md'} as={IoMdMore} />
+            </StyledIconHeader>
+          </Flex>
+
+          <Flex alignItems={'center'}>
+            <StyledIconHeader>
+              <Icon size={'md'} as={IoPersonAddSharp} />
             </StyledIconHeader>
             <BorderPadding />
           </Flex>

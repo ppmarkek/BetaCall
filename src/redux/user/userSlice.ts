@@ -1,6 +1,17 @@
 import { userAppwriteSignIn, userSignIn } from '@/app/api/auth/route';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
+interface contactsInterface {
+  id: string;
+  contactEmail: string;
+  firstName: string;
+  lastName: string;
+  jobName: string;
+  phoneNumber: string;
+  contactsGroup: string;
+  _id: string;
+}
+
 interface UserInterface {
   _id: string;
   email: string;
@@ -11,6 +22,7 @@ interface UserInterface {
   verified: boolean;
   createdAt: string;
   updatedAt: string;
+  contacts: contactsInterface[];
 }
 
 interface UserState extends UserInterface {
@@ -28,6 +40,7 @@ const initialState: UserState = {
   verified: false,
   createdAt: '',
   updatedAt: '',
+  contacts: [],
   loading: false,
   error: null,
 };
