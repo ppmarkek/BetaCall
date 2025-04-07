@@ -82,6 +82,30 @@ export const MenuIcon = styled(Box)`
   }
 `;
 
+export const StyledIconHeader = styled(Box)`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border: 1px solid #eceef5;
+  border-radius: 8px;
+  transition: all 0.3s;
+  cursor: pointer;
+  svg {
+    fill: #8083a3;
+    transition: all 0.3s;
+  }
+
+  :hover {
+    background: #eceef5;
+    svg {
+      fill: #6b59cc;
+    }
+  }
+`;
+
 export const BorderBox = styled(Box)<{ bigMenu?: boolean }>`
   width: 15px;
   height: 2px;
@@ -169,4 +193,16 @@ export const StyledPopoverContent = styled(PopoverContent)`
   right: 0;
   top: 50px;
   width: auto;
+`;
+
+export const MessagesHeader = styled(Flex)`
+  padding-left: 30px;
+  justify-content: space-between;
+  width: calc(80% - 80px);
+`;
+
+export const BorderPadding = styled(Box)`
+  margin: 0px 20px;
+  border-right: 1px solid #eceef5;
+  height: 25px;
 `;

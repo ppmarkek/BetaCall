@@ -30,6 +30,7 @@ type TypographyProps = {
     | Variant;
   color?: string;
   weight?: 'Bold' | 'Regular' | 'Small' | TypographyWeight;
+  className?: string;
   children?: React.ReactNode;
 };
 
@@ -37,6 +38,7 @@ export default function Typography({
   variant,
   color,
   weight,
+  className,
   children,
 }: TypographyProps) {
   switch (variant) {
@@ -48,6 +50,7 @@ export default function Typography({
           fontWeight={'700'}
           fontSize={'32px'}
           lineHeight={'42px'}
+          className={className}
         >
           {children}
         </Text>
@@ -60,6 +63,7 @@ export default function Typography({
           fontWeight={'700'}
           fontSize={'26px'}
           lineHeight={'38px'}
+          className={className}
         >
           {children}
         </Text>
@@ -72,6 +76,7 @@ export default function Typography({
           fontWeight={'700'}
           fontSize={'20px'}
           lineHeight={'32px'}
+          className={className}
         >
           {children}
         </Text>
@@ -84,6 +89,7 @@ export default function Typography({
           fontWeight={'700'}
           fontSize={'18px'}
           lineHeight={'27px'}
+          className={className}
         >
           {children}
         </Text>
@@ -96,6 +102,7 @@ export default function Typography({
           fontSize={'16px'}
           fontWeight={'700'}
           lineHeight={'24px'}
+          className={className}
         >
           {children}
         </Text>
@@ -116,6 +123,7 @@ export default function Typography({
                   : '400'
           }
           lineHeight={'19px'}
+          className={className}
         >
           {children}
         </Text>
@@ -136,6 +144,7 @@ export default function Typography({
                   : '400'
           }
           lineHeight={'21px'}
+          className={className}
         >
           {children}
         </Text>
@@ -156,6 +165,7 @@ export default function Typography({
                   : '400'
           }
           lineHeight={'18px'}
+          className={className}
         >
           {children}
         </Text>
@@ -176,6 +186,7 @@ export default function Typography({
                   : '400'
           }
           lineHeight={'21px'}
+          className={className}
         >
           {children}
         </Text>
