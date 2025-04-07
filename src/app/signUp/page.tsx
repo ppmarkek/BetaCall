@@ -5,14 +5,28 @@ import { Wrapper } from './style';
 import { StepOne, StepTwo, StepThree } from './steps';
 import { useEffect, useState } from 'react';
 import { account } from '@/lib/appwrite';
-import { userAppwriteSignIn } from '../api/auth/route';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { getSignUpCallbacks } from './signUpCallbacks';
+import { useDispatch, useSelector } from 'react-redux';
+import { signUpUserAppwrite } from '@/redux/user/userSlice';
+import { AppDispatch, RootState } from '@/redux/store';
 
 type FormDataStepOne = {
   email: string;
   terms: boolean;
 };
+
+interface UserInterface {
+  _id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  role: string;
+  appwriteId: string;
+  verified: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
 
 export default function SignUpPage() {
   const searchParams = useSearchParams();
@@ -23,7 +37,11 @@ export default function SignUpPage() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [terms, setTerms] = useState(false);
-  const [loading, setLoading] = useState(Boolean(search));
+  const [localLoading, setLocalLoading] = useState(Boolean(search));
+  const { loading } = useSelector(
+    (state: RootState & { user: UserInterface }) => state.user
+  );
+  const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
 
   const handleStepOneNext = (data: FormDataStepOne) => {
@@ -40,28 +58,38 @@ export default function SignUpPage() {
   useEffect(() => {
     if (!search) return;
 
-    let navigated = false;
-    account
-      .get()
-      .then(async (data) => {
+    async function handleOAuthSignUp() {
+      try {
+        const data = await account.get();
         const params = new URLSearchParams(searchParams.toString());
         params.delete('socialMedia');
         const newUrl = `?${params.toString()}`;
         window.history.replaceState(null, '', newUrl);
         if (data) {
-          const response = await userAppwriteSignIn({
-            email: data.email,
-            appwriteId: data.$id,
-          });
-          if (response.status === 200) {
-            document.cookie = `accessToken=${response.data.accessToken}; path=/; Secure; SameSite=Strict;`;
-            document.cookie = `refreshToken=${response.data.refreshToken}; path=/; Secure; SameSite=Strict;`;
-            router.push('/');
-            navigated = true;
-          } else if (response.status === 403) {
-            router.push(`/verify/${data.email}`);
-            navigated = true;
-          } else if (response.status === 404) {
+          const result = await dispatch(
+            signUpUserAppwrite({
+              email: data.email,
+              appwriteId: data.$id,
+              name: data.name,
+            })
+          );
+          if (signUpUserAppwrite.fulfilled.match(result)) {
+            await router.push('/');
+            return;
+          } else if (
+            result.payload &&
+            typeof result.payload === 'object' &&
+            'verificationRequired' in result.payload &&
+            result.payload.verificationRequired
+          ) {
+            await router.push(`/verify/${data.email}`);
+            return;
+          } else if (
+            result.payload &&
+            typeof result.payload === 'object' &&
+            'isNotRegistr' in result.payload &&
+            result.payload.isNotRegistr
+          ) {
             setEmail(data.email);
             setAppwriteId(data.$id);
             setFirstName(data.name.split(' ')[0]);
@@ -69,20 +97,18 @@ export default function SignUpPage() {
             setStep(1);
           }
         }
-      })
-      .catch((error) => {
-        if (error.message.includes('missing scope')) {
-          setLoading(false);
+      } catch (error) {
+        if (error instanceof Error && error.message.includes('missing scope')) {
+          setLocalLoading(false);
         } else {
           console.error('Error fetching google account data:', error);
         }
-      })
-      .finally(() => {
-        if (!navigated) {
-          setLoading(false);
-        }
-      });
-  }, [search, searchParams, router]);
+      }
+      setLocalLoading(false);
+    }
+
+    handleOAuthSignUp();
+  }, [search, searchParams, router, dispatch]);
 
   useEffect(() => {
     const handleBeforeUnload = () => {
@@ -100,7 +126,7 @@ export default function SignUpPage() {
     };
   }, []);
 
-  if (loading) {
+  if (loading || localLoading) {
     return (
       <Flex
         height={'calc(100svh - 81px)'}
@@ -128,12 +154,15 @@ export default function SignUpPage() {
           count={3}
         >
           <StepsContent index={0} data-testid="steps-content-0">
-            <StepOne nextStep={handleStepOneNext} setLoading={setLoading} />
+            <StepOne
+              nextStep={handleStepOneNext}
+              setLoading={setLocalLoading}
+            />
           </StepsContent>
 
           <StepsContent index={1} data-testid="steps-content-1">
             <StepTwo
-              setLoading={setLoading}
+              setLoading={setLocalLoading}
               nextStep={handleStepTwoNext}
               setEmail={handleSetEmail}
               email={email}

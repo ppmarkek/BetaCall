@@ -50,6 +50,8 @@ import {
   FaAngleRight,
 } from 'react-icons/fa';
 import Typography from '../typography/typography';
+import { useDispatch } from 'react-redux';
+import { removeUserInfo } from '@/redux/user/userSlice';
 
 const ICONS = [
   { link: '/', title: 'Dashboard', icon: <IoMdHome /> },
@@ -197,6 +199,8 @@ function AuthenticatedHeader({
   const [searchActive, setSearchActive] = useState(false);
   const searchRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const dispatch = useDispatch();
+
   const router = useRouter();
 
   useClickOutside<HTMLDivElement>(searchRef, () => setSearchActive(false));
@@ -204,6 +208,7 @@ function AuthenticatedHeader({
   const handleLogout = () => {
     document.cookie = `accessToken=; path=/; Secure; SameSite=Strict;`;
     document.cookie = `refreshToken=; path=/; Secure; SameSite=Strict;`;
+    dispatch(removeUserInfo());
     router.push('/signIn');
   };
 

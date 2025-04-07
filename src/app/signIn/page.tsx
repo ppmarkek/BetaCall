@@ -9,11 +9,13 @@ import { FaEye } from 'react-icons/fa6';
 import TextInput from '@/components/input/input';
 import Typography from '@/components/typography/typography';
 import Button from '@/components/button/button';
-import { userSignIn, userAppwriteSignIn } from '../api/auth/route';
 import { StyledCheckbox, StyledLink, Wrapper, BoxOr } from './style';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { account } from '@/lib/appwrite';
 import { OAuthProvider } from 'appwrite';
+import { useDispatch, useSelector } from 'react-redux';
+import { signInUser, signInUserAppwrite } from '@/redux/user/userSlice';
+import { AppDispatch, RootState } from '@/redux/store';
 
 interface FormDataSignIn {
   email: string;
@@ -26,7 +28,10 @@ export default function SignInPage() {
   const socialMediaParam = searchParams.get('socialMedia');
   const [showPassword, setShowPassword] = useState(false);
   const [errorLogin, setErrorLogin] = useState(false);
-  const [loading, setLoading] = useState(Boolean(socialMediaParam));
+  const [localLoading, setLocalLoading] = useState(Boolean(socialMediaParam));
+
+  const { loading } = useSelector((state: RootState) => state.user);
+  const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
 
   const {
@@ -37,28 +42,8 @@ export default function SignInPage() {
 
   const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
 
-  const onSubmit = async (data: FormDataSignIn) => {
-    setLoading(true);
-    try {
-      const response = await userSignIn(data);
-
-      if (response.status === 200) {
-        document.cookie = `accessToken=${response.data.accessToken}; path=/; Secure; SameSite=Strict;`;
-        document.cookie = `refreshToken=${response.data.refreshToken}; path=/; Secure; SameSite=Strict;`;
-        router.push('/');
-      } else if (response.status === 403) {
-        router.push(`/verify/${data.email}`);
-      } else if (response.status >= 400) {
-        setErrorLogin(true);
-      }
-    } catch (err) {
-      console.error(err);
-    }
-    setLoading(false);
-  };
-
   const handleGoogleLogin = () => {
-    setLoading(true);
+    setLocalLoading(true);
     account.createOAuth2Session(
       OAuthProvider.Google,
       'http://localhost:3000/signIn?socialMedia=true',
@@ -67,7 +52,7 @@ export default function SignInPage() {
   };
 
   const handleGithubLogin = () => {
-    setLoading(true);
+    setLocalLoading(true);
     account.createOAuth2Session(
       OAuthProvider.Github,
       'http://localhost:3000/signIn?socialMedia=true',
@@ -75,66 +60,88 @@ export default function SignInPage() {
     );
   };
 
+  const onSubmit = async (data: FormDataSignIn) => {
+    setLocalLoading(true);
+    const result = await dispatch(
+      signInUser({ email: data.email, password: data.password })
+    );
+
+    if (signInUser.fulfilled.match(result)) {
+      await router.push('/');
+      return;
+    } else if (
+      result.payload &&
+      typeof result.payload === 'object' &&
+      'verificationRequired' in result.payload &&
+      result.payload.verificationRequired
+    ) {
+      await router.push(`/verify/${data.email}`);
+      return;
+    } else if (
+      result.payload &&
+      typeof result.payload === 'object' &&
+      'message' in result.payload
+    ) {
+      setErrorLogin(true);
+    }
+    setLocalLoading(false);
+  };
+
   useEffect(() => {
     if (!socialMediaParam) return;
 
-    const params = new URLSearchParams(searchParams.toString());
-    let navigated = false;
-
-    account
-      .get()
-      .then(async (data) => {
+    async function handleOAuth() {
+      try {
+        const data = await account.get();
         if (data) {
-          const response = await userAppwriteSignIn({
-            email: data.email,
-            appwriteId: data.$id,
-          });
-          if (response.status === 200) {
-            if (params.has('socialMedia')) {
-              params.delete('socialMedia');
-              const newUrl = `?${params.toString()}`;
-              window.history.replaceState(null, '', newUrl);
+          const result = await dispatch(
+            signInUserAppwrite({
+              email: data.email,
+              appwriteId: data.$id,
+              name: data.name,
+            })
+          );
+          if (signInUserAppwrite.fulfilled.match(result)) {
+            await router.push('/');
+            return;
+          } else if (
+            result.payload &&
+            typeof result.payload === 'object' &&
+            'redirectToSignUp' in result.payload &&
+            result.payload.redirectToSignUp
+          ) {
+            if ('signUpUrl' in result.payload) {
+              await router.push(result.payload.signUpUrl as string);
+              return;
             }
-            document.cookie = `accessToken=${response.data.accessToken}; path=/; Secure; SameSite=Strict;`;
-            document.cookie = `refreshToken=${response.data.refreshToken}; path=/; Secure; SameSite=Strict;`;
-            router.push('/');
-            navigated = true;
-          } else if (response.status === 403) {
-            router.push(`/verify/${data.email}`);
-            navigated = true;
-          } else if (response.status === 404) {
-            const [firstName, lastName] = data.name.split(' ');
-            if (params.has('socialMedia')) {
-              params.delete('socialMedia');
-              const newUrl = `?${params.toString()}`;
-              window.history.replaceState(null, '', newUrl);
-            }
-            router.push(
-              `/signUp?socialMedia=true&step=2&email=${encodeURIComponent(
-                data.email
-              )}&appwriteId=${encodeURIComponent(
-                data.$id
-              )}&firstName=${encodeURIComponent(
-                firstName
-              )}&lastName=${encodeURIComponent(lastName)}`
-            );
-            navigated = true;
+          } else if (
+            result.payload &&
+            typeof result.payload === 'object' &&
+            'verificationRequired' in result.payload &&
+            result.payload.verificationRequired
+          ) {
+            await router.push(`/verify/${data.email}`);
+            return;
+          } else if (
+            result.payload &&
+            typeof result.payload === 'object' &&
+            'message' in result.payload
+          ) {
+            setErrorLogin(true);
           }
         }
-      })
-      .catch((error) => {
-        if (!error.message.includes('missing scope')) {
+      } catch (error) {
+        if (error instanceof Error && !error.message.includes('missing scope')) {
           console.error('Error fetching google account data:', error);
         }
-      })
-      .finally(() => {
-        if (!navigated) {
-          setLoading(false);
-        }
-      });
-  }, [router, socialMediaParam, searchParams]);
+      }
+      setLocalLoading(false);
+    }
 
-  if (loading) {
+    handleOAuth();
+  }, [socialMediaParam, dispatch, router]);
+
+  if (localLoading || loading) {
     return (
       <Flex
         height="calc(100svh - 81px)"

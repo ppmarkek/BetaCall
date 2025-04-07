@@ -8,13 +8,14 @@ interface SignInResponseData {
   refreshToken: string;
   user: {
     _id: string;
-    createdAt: string;
     email: string;
     firstName: string;
     lastName: string;
     role: string;
+    appwriteId: string;
+    verified: boolean;
+    createdAt: string;
     updatedAt: string;
-    __v: number;
   };
 }
 
